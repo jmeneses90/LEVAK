@@ -1,6 +1,7 @@
-# LEVAK validation framework
+# Living Evidence Map of the Adult Immunisation Program in Norway (LEVAK)
 
-Validation of the AIscreenR-assisted study selection workflow in LEVAK, the living evidence map on vaccine research, developed by the Department of Infectious Disease Control and Vaccines at the Norwegian Institute of Public Health.
+Welcome to LEVAK! LEVAK is a living evidence map on vaccine research developed by the Department of Infectious Disease Control and Vaccines at the Norwegian Institute of Public Health. This site outlines the methods underpinning LEVAK and provides insights into the validation framework upon which it is built.
+The studies presented in LEVAK are selected using an AIscreenR-assisted workflow. Further details on AIscnreenR are available at its won repo: https://mikkelvembye.github.io/AIscreenR/.  
 
 Text text example
 
