@@ -23,3 +23,12 @@ Thumbs.db
 # 5. Outpus (large and not needed)
 outputs/*.rds
 outputs/tmp/
+*_files/
+
+# EndNote files
+*.enl
+*.eni
+*.Data/
+
+# Backup folder
+backup/

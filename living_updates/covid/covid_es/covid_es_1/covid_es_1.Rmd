@@ -1,0 +1,251 @@
+---
+title: "Screening 1 for COVID: effect and safety"
+author: "Jose Meneses"
+date: "2026-11-03"
+output: github_document
+---
+
+
+# Summary
+This is the first screening for COVID, focusing on the effect and safety of the COVID vaccines. 
+Date: 03 November 2026
+Responsible: Jose Meneses
+
+# Loading the required libraries
+```{r setup, include=FALSE} 
+library(writexl)
+library(dplyr)
+library(synthesisr)
+library(AIscreenR)
+library(tibble)
+library(revtools)
+library(flextable)
+library(tinytex)
+library(tidyr)
+library(ggplot2)
+library(gt)
+library(webshot2)
+library(packrat)
+library(rsconnect)
+library(chromote)
+library(openxlsx)
+library(languageserver)
+
+file.exists("C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/pandoc.exe")
+Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/pandoc.exe")
+```
+
+# setting the working directory
+```{r}
+# setwd("C:\\Users\\JOFM\\OneDrive - Folkehelseinstituttet\\Vaksinasjon av voksne og risikogrupper - LEVAK\\COVID_LEVAK\\Effekt_&_sikkerhet_COVID\\COVID_oppdateringer\\COVID_1_ES")
+
+# getwd()
+```
+
+# creating the folders
+```{r}  
+# folders <- c("data", "outputs", "prompt")
+# for (folder in folders) {
+#   if (!dir.exists(folder)) {
+#     dir.create(folder)
+#   }
+# }
+```
+
+# prompt - inserting the prompt
+```{r}
+# prompt <- R"(Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. Task: Evaluate whether the study meets the eligibility criteria below, based strictly on its title and abstract.
+# Eligibility Criteria. Inclusion Criteria (Must meet ALL of the following):
+# Population: Human participants of any age, health status, or vaccination history.
+# Intervention: Explicitly evaluates the effects, efficacy, or safety of a COVID-19 vaccine. The study MUST report specific outcome data for COVID-19 vaccines. Include only studies that evaluate any of the following vaccines, inkludert oppfriskningsdoser (boostere):
+# o mRNA-vaksiner: Moderna (Spikevax), neste generasjon mRNA (mNEXSPIKE), Pfizer/BioNTech (Comirnaty).
+# o Proteinbaserte subenhetsvaksiner: HIPRA / Bimervax, Novavax (Nuvaxovid, Novavax, Covovax), Sanofi (VidPrevtyn).
+# o sa-mRNA-vaksiner: Arcturus (Kostaive), inkludert zapomeran.
+# If a study evaluates multiple COVID-19 vaccines, but evaluates at least one of the vaccines mentioned above, include the study.
+# Comparator: Any comparator or no comparator is acceptable.
+# Eligible Study Designs: Experimental: Randomized controlled trials (RCTs), non-randomized studies, quasi-experimental studies.
+# Observational: Prospective/retrospective cohort studies, population-based studies, registry-based studies, case-control, and nested case-control studies.
+# Secondary research/Other: Systematic reviews, meta-analyses, post-marketing safety evaluations, and clinical guidelines explicitly based on systematic reviews.
+# Exclusion Criteria (Exclude if ANY of the following apply):
+# Missing Information: Exclude if any of the following apply: 1) the title and abstract lack sufficient detail to confirm eligibility; 2) if the abstract is missing, unless the title explicitly specifies an eligible study design evaluating COVID-19 vaccines; 3) There is no information provided in the title; 4) the title or abstract does not clearly indicate that the study evaluates COVID-19 vaccines.
+# Out of Scope: Non-human studies; studies not evaluating/reporting specific effects, efficacy, or safety data for COVID-19 vaccines.
+# Ineligible Study Designs: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
+# Constraints & Rules: Base your decision ONLY on the provided title and abstract. Full-text evaluation is not possible to confirm eligibility.
+# Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
+# Required Output Format
+# Decision: [Include / Exclude]
+# Primary Reason: [Briefly state the core reason for the decision]
+# Rationale: [Provide a concise, step-by-step breakdown referencing specific criteria])"
+```
+
+# saving the prompt to a text file
+```{r}
+# writeLines(prompt, "prompts/prompt.txt")
+```
+
+# API key
+```{r}
+# get_api_key()
+```
+
+# Loading the references
+```{r}
+COVID1_ES_references <- read_ris_to_dataframe("data//LEVAK_COVID_ES_1_202608.txt")
+COVID1_ES_references <- readRDS("data/COVID1_ES_references.RData")
+
+
+view(COVID1_ES_references)
+colnames(COVID1_ES_references)
+
+# saving the references in RData and Excel formats
+saveRDS(COVID1_ES_references, file = "data/COVID1_ES_references.RData")
+write.xlsx(COVID1_ES_references, "data/COVID1_ES_references.xlsx")
+```
+
+```{r}
+# splitting the references into chunks of 200
+chunks <- split(COVID1_ES_references, ceiling(seq_along(1:nrow(COVID1_ES_references))/200))
+
+# creating the folder for the outputs
+dir.create("screening_chunks", showWarnings = FALSE)
+
+# looping through each chunk and saving it as a separate RData file
+for (i in seq_along(chunks)) {
+    f <- file.path("screening_chunks", sprintf("chunk_%03d.rds", i))
+    if (file.exists(f)) next 
+
+    res <- tryCatch(
+        tabscreen_gpt(
+         data = chunks[[i]],
+         prompt = prompt,
+         studyid = record_id,
+         abstract = abstract,
+         model = "gpt-5-mini",
+         reps = 1,
+         decision_description = TRUE
+    ),
+    error = function(e) { message("Bolk ", i, " feilet: ", conditionMessage(e)); NULL }
+)
+    if (!is.null(res)) saveRDS(res, f)
+}
+```
+
+ #  putting all the chunks together-saving the chunk files 
+```{r}
+chunk_files <- list.files("screening_chunks", full.names = TRUE)
+
+view(chunk_files)
+saveRDS(chunk_files, "outputs/chunk_files.RData")
+write_xlsx(data.frame(chunk_files), "outputs/chunk_files.xlsx")
+readxlsx("outputs/chunk_files.xlsx")
+```
+
+# creating the compiled screening results by combining all the chunk files
+```{r}
+COVID1_ES_screening_results <- purrr::map(chunk_files, \(f) readRDS(f)$answer_data) |>
+  purrr::list_rbind()
+```
+
+# saving the compiled screening results in RData and Excel formats
+```{r}
+# saving the screening results in RData and Excel formats
+saveRDS(COVID1_ES_screening_results, file = "outputs/COVID1_ES_screening_results.RData")
+write.xlsx(COVID1_ES_screening_results, "outputs/COVID1_ES_screening_results.xlsx")
+
+COVID1_ES_screening_results <- readRDS("outputs/COVID1_ES_screening_results.RData")
+```
+
+# inspecting the completeness of the screening results
+
+```{r}
+#successful and failed rows
+successful_references <- purrr::map(chunk_files, \(f) readRDS(f)$answer_data) |> purrr::list_rbind()
+errors <- purrr::map(chunk_files, \(f) readRDS(f)$error_data) |> purrr::list_rbind()
+
+#sanity checks
+length(chunks) == length(chunk_files) # TRUE, the number of chunks is equal to the number of chunk files
+nrow(COVID1_ES_references) # checking the number of references = 12030
+nrow(successful_references); n_distinct(successful_references$studyid) # no duplicates 
+sum(is.na(successful_references$decision_binary)) # checking for missing decisions = 209
+nrow(errors) # checking the number of errors = 209
+names(errors) # inspect the error columns/messages
+```
+
+# extracting the successful and failed references
+```{r}
+# IDs with a valid decision (successful references)
+ok_ids <- successful_references |>
+  filter(!is.na(decision_binary)) |>
+  pull(studyid) |>
+  unique() |>
+  as.character()
+
+# references NOT screened (covers failed calls AND missing chunks)
+not_screened <- COVID1_ES_references |>
+  filter(!as.character(record_id) %in% ok_ids)
+  nrow(not_screened) # 209 references not screened successfully
+  view(not_screened)
+
+# valid results from the first run, to keep
+screened_1 <- successful_references |> filter(!is.na(decision_binary))
+```
+
+# re-run the loop for the failed references 
+Use a separate folder so the first-run files stay untouched:
+
+```{r}
+dir.create("screening_chunks_retry", showWarnings = FALSE)
+chunks_retry <- split(not_screened, ceiling(seq_along(nrow(not_screened))/200)) # putting the chunks of the failed references into chunks of 200
+
+# the loop for the failed references
+for (i in seq_along(chunks_retry)) {
+  f <- file.path("screening_chunks_retry", sprintf("chunk_%03d.rds", i))
+  if (file.exists(f)) next
+
+  res <- tryCatch(
+    tabscreen_gpt(
+      data = chunks_retry[[i]],
+      prompt = prompt,
+      studyid = record_id,
+      abstract = abstract,
+      model = "gpt-5-mini",
+      reps = 1,
+      decision_description = TRUE
+    ),
+    error = function(e) { message("Chunk ", i, " failed: ", conditionMessage(e)); NULL }
+  )
+  if (!is.null(res)) saveRDS(res, f)
+}
+```
+
+It is important to keep the same prompt and model for the re-run to ensure consistency in the screening process.
+
+# merge and verify
+```{r}
+retry_files <- list.files("screening_chunks_retry", full.names = TRUE, pattern = "\\.rds$")
+
+screened_retry <- purrr::map(retry_files, \(f) readRDS(f)$answer_data) |>
+  purrr::list_rbind() |>
+  filter(!is.na(decision_binary))
+saveRDS(screened_retry, "outputs/screened_retry.RData")
+openxlsx::write.xlsx(screened_retry, "outputs/screened_retry.xlsx")
+
+COVID1_ES_screening_results <- bind_rows(screened_1, screened_retry) #combining the results from the first run and the re-run
+
+# should be TRUE, and 0
+nrow(COVID1_ES_screening_results) == nrow(COVID1_ES_references)
+setdiff(as.character(COVID1_ES_references$record_id),
+        as.character(COVID1_ES_screening_results$studyid))
+
+saveRDS(COVID1_ES_screening_results, "outputs/COVID1_ES_screening_results.RData")
+openxlsx::write.xlsx(COVID1_ES_screening_results, "outputs/COVID1_ES_screening_results.xlsx")
+
+nrow(COVID1_ES_screening_results) # 12030
+sum(is.na(COVID1_ES_screening_results$decision_binary)) # 0 meaning all references have been screened successfully
+```
+
+
+```{r}
+# insert text/code
+```
+

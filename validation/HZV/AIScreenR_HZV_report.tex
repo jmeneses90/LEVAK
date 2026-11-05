@@ -1,0 +1,1750 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{anyfontsize}
+\usepackage{multirow}
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={AIScreenR in herpes zoster HTA},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{AIScreenR in herpes zoster HTA}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\renewcommand*\contentsname{Table of contents}
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+
+Prepared by: Jose F. Meneses-Echávez. Collaborators: Rafael Nozal, Brita
+Askeland, Birgitte Klüwer, Anna Hayman R, Ingvild Kirkehei, Kjersti
+Rydland \emph{Seksjon for luft-, blod- og seksuell smitte. Avdeling for
+smittevern og vaksine. Folkehelseinstituttet. Oslo, Norway.} Date:
+07.04.2026.
+
+\section{Key summary}\label{key-summary}
+
+\textbf{Background and Methods}
+
+This report evaluates the R-package \texttt{AIScreenR} for screening
+titles and abstracts, using an evidence synthesis on herpes zoster
+vaccination (HZV) as a benchmark. The full HZV report is available at:
+\url{https://www.fhi.no/publ/2026/vaksine-mot-helvetesild-i-voksenvaksinasjonsprogram/}.\\
+\strut \\
+Developed by researchers at VIVE in Denmark, \texttt{AIScreenR} serves
+as a communication bridge between researchers and Large Language Models
+(LLMs), allowing the LLM to assess references based on specific
+inclusion and exclusion criteria.
+
+The unit of analysis for this evaluation consisted of 11,445 references
+retrieved by the HZV team from the databases. We prepared the reference
+library, developed and tested a prompt designed to communicate the
+selection criteria to the LLM. To evaluate the \texttt{AIScreenR}'s
+performance, we developed custom code to visualize the results through a
+confusion matrix to report performance metrics, such as accuracy and
+workload savings.
+
+\textbf{Key findings}
+
+\emph{Workload reduction}: \texttt{AIScreenR} reduced the screening
+workload by nearly 90\%. It safely identified and removed 10,171
+references (89\% of the total) that had also been excluded by the HZV
+team.
+
+\emph{Residual manual workload:} The LLMs tend to be over-inclusive,
+allowing researchers to double-check the data. \texttt{AIScreenR}
+included 1,138 references that were excluded by the HZV team.
+
+\emph{Recall and Accuracy}: \texttt{AIScreenR} identified 61\% of the
+references included by the HZV team but overlooked 48 relevant
+references. This recall should be higher (at least 75\% before full
+implementation in evidence synthesis workflows).
+
+\textbf{Discussion}
+
+\emph{Recall Threshold}: The current recall rate (61\%) should reach at
+least 75\% before full implementation in evidence synthesis workflows is
+recommended.
+
+\emph{Error Analysis}: A detailed analysis of the False Negatives
+(references wrongly excluded by the AI) is necessary to better
+understand and improve \texttt{AIScreenR}'s performance.
+
+\emph{Current Utility}: \texttt{AIScreenR} should currently be utilized
+to prioritize screening rather than to replace human review entirely.
+
+\section{Background}\label{background}
+
+\subsection{AIScreenR}\label{aiscreenr}
+
+\texttt{AIScreenR} (Vembye et al. 2025) is an R package designed to
+streamline the title and abstract screening phase of evidence synthesis
+by deploying Large Language Models (LLMs) through the
+\href{https://openai.com/nb-NO/api/}{OpenAI API}. Its purpose is to act
+as an automated screener that evaluates the relevance of references
+against specific inclusion and exclusion criteria defined by
+researchers. \texttt{AIScreenR} allows researchers to instruct the AI
+via a prompt to assess the eligibility of a study. It is most commonly
+used to reduce the immense manual workload of evidence synthesis,
+particularly by serving as an efficient ``second reviewer'' that can
+accurately identify and remove irrelevant studies.
+
+\texttt{AIScreenR}'s performance was validated in 2025, using as a
+benchmark the screening decisions made by the teams of 22 high-quality
+systematic reviews with different levels of complexity (Vembye et al.
+2025). \texttt{AIScreenR} showed that the LLM performed on par with, and
+in some cases even better than, human reviewers in title and abstract
+screening (Vembye et al. 2025). The tool demonstrated high accuracy and
+reliability, especially when a ``human-in-the-loop'' strategy was
+employed. Through confusion matrices and error reports, researchers
+proved that \texttt{AIScreenR} can successfully filter clear inclusions
+and exclusions, making it a validated and robust addition to the modern
+evidence synthesis toolkit.
+
+\section{Objective}\label{objective}
+
+To evaluate the performance of \texttt{AIScreenR} in screening
+references at the title and abstract level, using a health technology
+assessment (HTA) on herpes zoster vaccination as the gold-standard
+comparative benchmark.\\
+
+\section{Methods}\label{methods}
+
+Insert information. See
+\href{https://folkehelse.sharepoint.com/:w:/r/sites/sp000002582/_layouts/15/Doc.aspx?sourcedoc=\%7B1057E2A0-7192-422D-B22E-89E5151100D1\%7D&file=Forskningskart_VVP_prosjektplan_utkast.docx&action=default&mobileredirect=true}{protocol}.
+
+Further insights on LLM evaluation are available elsewhere:
+\url{https://www.ibm.com/think/insights/llm-evaluation}
+
+\subsection{Data requirements}\label{data-requirements}
+
+For the \texttt{AIScreenR} screening functions to operate successfully,
+the dataset must contain at least three specific variables: a unique
+identifier for each record (e.g., \texttt{studyid}), the article
+\texttt{title}, and the \texttt{abstract}.
+
+It is also highly recommended to include a \texttt{human\_code} variable
+containing previous screening decisions (0 for excluded, 1 for included)
+in order to validate the AI's performance.
+
+\subsection{Data quality}\label{data-quality}
+
+Before the screening phase, you must ensure data quality by filtering
+out records with missing abstracts and resolving any character encoding
+issues that could interfere with the API's token processing in
+\texttt{AIScreenR}.
+
+In many academic workflows, the search results will most likely be saved
+in an EndNote library before being brought into R. To facilitate the
+import, you should export your EndNote library as an XML or RIS file, as
+these formats are the most stable for preserving the relationship
+between titles and abstracts.
+
+Once exported, the \texttt{synthesisr::read\_refs()} function can parse
+these files directly, maintaining the metadata structure required for
+the screening process. This function belongs to the
+\href{https://cran.r-project.org/web/packages/synthesisr/vignettes/synthesisr_vignette.html}{\texttt{synthesisr}}
+package, which is a specialized tool for importing, exporting, and
+manipulating bibliographic data in R.
+
+\subsection{HZV use case}\label{hzv-use-case}
+
+On 30 January 2026, the research librarian (Marita Heintz) provided the
+literature search results in a RIS file (.ris) format. The results of
+the title and abstract screening for the original Herpes Zoster vaccine
+HTA were not available. Instead, Eli Heeen and Lene Juvet provided Jose
+Meneses with the final list of included studies and those excluded at
+the full-text stage.
+
+To reconstruct the dataset for validation, Jose Meneses manually coded
+these references in EndNote to establish the following classifications:
+
+\begin{itemize}
+\item
+  \textbf{Title and Abstract Screening (TA)}
+
+  \begin{itemize}
+  \item
+    Included references (\texttt{Included\_TA})
+  \item
+    Excluded references (\texttt{Excluded\_TA})
+  \end{itemize}
+\item
+  \textbf{Full-Text Screening (FT)}
+
+  \begin{itemize}
+  \item
+    Included references (\texttt{Included\_FT})
+  \item
+    Excluded references (\texttt{Excluded\_FT})
+  \end{itemize}
+\end{itemize}
+
+After manually coding the \texttt{Included\_TA} references in EndNote,
+we reconstructed the \texttt{Excluded\_TA} set by subtracting the
+\texttt{Included\_TA} references from the complete library of
+references. To replicate this in EndNote, follow these steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Navigate to \textbf{Groups} \textgreater{} \textbf{Create From
+  Groups}.
+\item
+  Name the new group (e.g., \texttt{Excluded\_TA}).
+\item
+  Under ``Include References in,'' select the \textbf{All References}
+  group.
+\item
+  Set the operator to \textbf{NOT} and select the \texttt{Included\_TA}
+  group in the dropdown.
+\item
+  Click \textbf{Create}.
+\end{enumerate}
+
+\subsection{Human\_code variable}\label{human_code-variable}
+
+The \texttt{human\_code} variable allows us to validate
+\texttt{AIScreenR} 's performance, as it contains the screening
+decisions made by the HZV team (ie, the human reviewers).
+
+We manually created a new field in EndNote to assign human assessments
+to each reference. This \texttt{human\_code} variable must be 0 for
+\texttt{Excluded\_TA} and 1 for \texttt{Included\_TA}. To add this
+variable to each reference in our RIS file, we must first create the
+custom field in EndNote using the following steps:
+
+\paragraph{Step 1: Create the Field in Your
+References}\label{step-1-create-the-field-in-your-references}
+
+To make a tag ``global,'' you must first ensure the field exists within
+your database records.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Go to \textbf{Edit \textgreater{} Preferences} (Windows)
+  \textbf{\textgreater{}} Select \textbf{Reference Types} from the menu
+  \textbf{\textgreater{} Modify Reference Types}.
+\item
+  Find one of the empty columns (such as \texttt{Custom\ 1}) and type
+  the name you want (e.g., \emph{human\_code}).
+\item
+  Click \textbf{OK}. All your references will now have this new field
+  available.
+\end{enumerate}
+
+\paragraph{Step 2: Bulk Fill the
+Field}\label{step-2-bulk-fill-the-field}
+
+If you want this field (tag) to appear across all existing references
+without typing them one by one:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Select all your references (\textbf{Ctrl+A}).
+\item
+  Go to the \textbf{Library} menu \textgreater{}
+  \textbf{Change/Move/Copy Fields}.
+\item
+  In the \textbf{Change Fields} tab, select the field you just named
+  (e.g., \emph{Custom 1}).
+\item
+  Choose the option \textbf{Replace whole field with:} and type the text
+  you want to appear (e.g, 1 for \texttt{Included\_TA}).
+\item
+  Press \textbf{OK}.
+\item
+  Repeat these steps for the \texttt{Excluded\_TA}.
+\end{enumerate}
+
+\paragraph{Step 3: Configure the RIS Export
+Format}\label{step-3-configure-the-ris-export-format}
+
+EndNote does not export custom fields by default. You must instruct it
+to associate your new field with a RIS tag (such as \texttt{U1}).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Go to \textbf{Edit \textgreater{} Output Styles \textgreater{} Edit
+  ``RefMan (RIS) Export''}.
+\item
+  In the menu on the left, click on \textbf{Templates}.
+\item
+  Locate the reference type you use most (e.g., \emph{Journal Article}).
+\item
+  You will see a list of tags like \texttt{AU\ \ -\ Author}. Go to the
+  end of the list and manually add:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Type \texttt{U1\ \ -} and then click the \textbf{Insert Field}
+    button to select your custom field (e.g., \emph{Custom 1}).
+  \end{itemize}
+\item
+  \textbf{Save your changes:} Go to \textbf{File \textgreater{} Save As}
+  and give it a name like \texttt{Custom\ RIS\ Export}.
+\end{enumerate}
+
+\paragraph{Step 4: Exporting the edited RIS
+file}\label{step-4-exporting-the-edited-ris-file}
+
+Ensure that when you clicked \textbf{File \textgreater{} Export} in
+EndNote, you actually select the new ``\texttt{Custom\ RIS\ Export}''
+style,~rather than the default ``RefMan (RIS) Export, to ensure the
+\texttt{U1} field is included in the final file.
+
+\subsection{Adjustment to references
+(optional)}\label{adjustment-to-references-optional}
+
+We restricted the database to the variables required by
+\texttt{AIScreenR}: ID, title, abstract, and \texttt{human\_code}. The
+\texttt{human\_code} variable is essential only when human screening
+results are available, as it enables a direct comparison between
+\texttt{AIScreenR}'s performance and the decisions made by human
+reviewers.
+
+\subsection{Package and Data upload}\label{package-and-data-upload}
+
+It is practical to centralize all packages and functions used for the
+evaluation and reporting into a dedicated code chunk.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("rsconnect")}
+\FunctionTok{library}\NormalTok{(rsconnect)}
+
+\CommentTok{\# Load packages and libraries}
+\FunctionTok{library}\NormalTok{(AIscreenR)}
+\FunctionTok{library}\NormalTok{(writexl)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(synthesisr)}
+\FunctionTok{library}\NormalTok{(tibble)}
+\FunctionTok{library}\NormalTok{(revtools)}
+\FunctionTok{library}\NormalTok{(flextable)}
+\FunctionTok{library}\NormalTok{(tinytex)}
+\FunctionTok{library}\NormalTok{(tidyr)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(gt)}
+\FunctionTok{library}\NormalTok{(webshot2)}
+\FunctionTok{library}\NormalTok{(packrat)}
+\FunctionTok{library}\NormalTok{(rsconnect)}
+\FunctionTok{library}\NormalTok{(chromote)}
+\FunctionTok{library}\NormalTok{(readxl)}
+\FunctionTok{library}\NormalTok{(future)}
+
+\CommentTok{\#devtools::install\_github("MikkelVembye/AIscreenR") \# most recent pakcage updates}
+
+\CommentTok{\#Load data of the project}
+\FunctionTok{load}\NormalTok{(}\StringTok{".RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Set API Key}\label{set-api-key}
+
+\texttt{AIScreenR} uses an API key to connect to a Large Language Model
+(LLM), in this case, the OpenAI API to connect to ChatGPT. After
+obtaining your API key (which is private and confidential), you can save
+it using the following code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{usethis}\SpecialCharTok{::}\FunctionTok{edit\_r\_environ}\NormalTok{() }\CommentTok{\# Run this code to open your .Renviron file and  write CHATGPT\_KEY=your\_key. Thereafter, close and save the .Renviron file and restart RStudio (ctrl + shift + F10). From now on, the AIscreenR functions will automatically use get\_api\_key() to retrieve your API key from your R environment. }
+
+\FunctionTok{get\_api\_key}\NormalTok{() }\CommentTok{\# To check the API Key was saved successfully.}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Importing the dataset}\label{importing-the-dataset}
+
+To import references for \texttt{AIScreenR}, you typically utilize the
+\texttt{synthesisr} or \texttt{revtools} packages to convert standard
+bibliographic files---such as .ris, .bib, or .txt---into an R-compatible
+data frame. The process begins by reading the raw file into R, which
+generates a table where each row represents a unique study (Vembye et
+al. 2025).
+
+We import the references that will be screened by \texttt{AIScreenR}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{confusion\_helvetesild3\_values}\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/Users/JOFM/OneDrive {-} Folkehelseinstituttet/Research projects/FHI/Smittevern/VVP/Helvetesild\_testing/confusion\_helvetesild3\_excel.xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: Expecting logical in V1572 / R1572C22: got '0'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in W1835 / R1835C23: got 'Population does not meet
+the criteria.'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in X2743 / R2743C24: got 'no'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in V4147 / R4147C22: got '0'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in Z7808 / R7808C26: got 'The population studied is
+not aligned with the criteria, and the intervention does not pertain to the
+required vaccines.'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in V10092 / R10092C22: got '0'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_references}\OtherTok{\textless{}{-}}\NormalTok{confusion\_helvetesild3\_values }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(ID, human\_code, title, abstract, studyid, promptid, prompt, n)}
+
+\FunctionTok{View}\NormalTok{(HZV\_references) }\CommentTok{\#inspecting the references}
+
+\FunctionTok{save}\NormalTok{(HZV\_references, }\AttributeTok{file =} \StringTok{"HZV\_references.RData"}\NormalTok{)}
+\FunctionTok{save.image}\NormalTok{(}\AttributeTok{file =} \StringTok{".RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Missing Titles check}\label{missing-titles-check}
+
+Missing titles: Use the following code to ensure no references are
+missing a title.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(HZV\_references}\SpecialCharTok{$}\NormalTok{title)) }\CommentTok{\# check missing titles}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0
+\end{verbatim}
+
+All the references have a title (No titles missing).
+
+\subsection{Missing Abstract check}\label{missing-abstract-check}
+
+The abstract is the primary source of information used by the AI to
+determine whether a study meets the inclusion criteria. Consequently,
+checking for missing abstracts is a critical step in ensuring the
+scientific integrity of the evidence synthesis.
+
+\texttt{AIScreenR}, independent of the specific GPT model employed,
+tends to exclude references by default when information is insufficient.
+If a study without an abstract is actually relevant, it results in a
+False Negative, meaning key evidence is omitted from the synthesis.
+
+Furthermore, the validation metrics for \texttt{AIScreenR} assume the AI
+has access to the same data as a human reviewer. Empty abstract fields
+artificially lower the performance scores, leading to biased conclusions
+regarding the tool's validation for a specific project.
+
+The abstracts in the database show ``No information'' instead of ``NA''.
+Use this code to standardize the missing values to ``NA'':
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verify the "No information" items.}
+\FunctionTok{sum}\NormalTok{(HZV\_references}\SpecialCharTok{$}\NormalTok{abstract }\SpecialCharTok{==} \StringTok{"No information"}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1616
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convert "No information" to a real "NA".}
+\NormalTok{HZV\_references}\SpecialCharTok{$}\NormalTok{abstract[HZV\_references}\SpecialCharTok{$}\NormalTok{abstract }\SpecialCharTok{==} \StringTok{"No information"}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\end{Highlighting}
+\end{Shaded}
+
+We can check the number of missing abstracts now:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(HZV\_references}\SpecialCharTok{$}\NormalTok{abstract)) }\CommentTok{\# check missing abstracts}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1616
+\end{verbatim}
+
+Abstracts are missing for 1,616 references, representing 14\% of the
+11,445 total entries in the EndNote library.
+
+\subsection{Prompt}\label{prompt}
+
+The prompt is the set of instructions that the LLM follows to determine
+the relevance of each study. In other words, the prompt mirrors the
+selection criteria, defining the key inclusion and exclusion criteria as
+clearly as possible. To ensure high accuracy, the prompt should be
+detailed and thorough.
+
+You can draft the prompt in either R or Word before integrating it into
+the pipeline.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_prompt }\OtherTok{\textless{}{-}} \StringTok{"Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. }
+\StringTok{Task: Evaluate whether a study meets the following specific inclusion criteria. }
+\StringTok{Population: Adults aged fifty years or older. Include participants regardless of previous vaccination history, history of herpes zoster, or presence of comorbidities (e.g., cardiovascular disease, Alzheimer’s). }
+\StringTok{Intervention: Recombinant Zoster Vaccine (RZV) (e.g., Shingrix, HZ/su) or Zoster Vaccine Live (ZVL) (e.g., Zostavax). }
+\StringTok{Comparison/Control: Placebo, no vaccine, or an alternative vaccine (including head{-}to{-}head comparisons between RZV and ZVL). }
+\StringTok{Study Design: Included: RCTs, non{-}randomized studies, observational studies (prospective/retrospective cohort, registry{-}based, quasi{-}experimental, case{-}control, nested case{-}control), and post{-}marketing safety evaluations. }
+\StringTok{Secondary Research: Include systematic reviews, meta{-}analyses, and literature reviews. }
+\StringTok{Excluded: Case studies and case series. }
+\StringTok{Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied."}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Screening command}\label{screening-command}
+
+\section{Results}\label{results}
+
+\subsection{Exploring the screening
+results}\label{exploring-the-screening-results}
+
+Print the results of the screening done by \texttt{AIScreenR}. Check the
+following variables:
+
+\begin{itemize}
+\item
+  \textbf{decision\_gpt:} the raw gpt decision - either ``1'', ``0'',
+  ``1.1'' for inclusion, exclusion, or uncertainty.
+\item
+  \textbf{detailed\_description:} the detailed description of the given
+  decision made by OpenAI's GPT API models.
+\item
+  \textbf{decision\_binary:} the binary gpt decision, that is 1 for
+  inclusion and 0 for exclusion.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Preview of the screening results data.}
+\FunctionTok{view}\NormalTok{(HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data) }\CommentTok{\# inspect the data}
+
+\CommentTok{\# Distribution of LLM{-}generated screening decisions}
+\NormalTok{HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary)}
+
+\CommentTok{\#Saving the results file}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_screening, }\StringTok{"HZV\_screening.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{AIScreenR} excluded 10,227 references and included 1,214.
+Additionally, \emph{four} references were marked as `NA' by the
+software. We checked these manually and reclassified them as excluded
+(0) as they are not deemed relevant to the study.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Assign 0 to the references with NA (n=4)}
+\NormalTok{HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary[}\FunctionTok{is.na}\NormalTok{(HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary)]}\OtherTok{\textless{}{-}}\DecValTok{0}
+
+\CommentTok{\#Check}
+\NormalTok{HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary)}
+\end{Highlighting}
+\end{Shaded}
+
+After cleaning the data, \texttt{AIScreenR} excluded 10,231 references
+and included 1,214 references Table~\ref{tbl-HZV-screening-rawtable}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Data wrangling\_row data (first table)}
+\NormalTok{HZV\_screening\_rawtable }\OtherTok{\textless{}{-}}\NormalTok{ HZV\_screening}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(decision\_binary) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Decision =} \FunctionTok{if\_else}\NormalTok{(decision\_binary }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"Included"}\NormalTok{, }\StringTok{"Excluded"}\NormalTok{),}
+    \AttributeTok{Percentage =}\NormalTok{ n }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(n)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(Decision, n, Percentage)}
+\FunctionTok{view}\NormalTok{(HZV\_screening\_rawtable)}
+
+\CommentTok{\# Saving the object in R and also as Excel}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_screening\_rawtable, }\StringTok{"HZV\_screening\_rawtable.rds"}\NormalTok{)}
+\NormalTok{writexl}\SpecialCharTok{::}\FunctionTok{write\_xlsx}\NormalTok{(HZV\_screening\_rawtable, }\StringTok{"HZV\_screening\_rawtable.xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tbl-HZV-screening-rawtable}AIScreenR screening results}
+
+\centering{
+
+\caption*{
+{\fontsize{20}{25}\selectfont  AIScreenR screening results\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Distribution of AIScreenR Screening Results\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrr}
+\toprule
+Decision & Frequency (n) & Percentage (\%) \\ 
+\midrule\addlinespace[2.5pt]
+Excluded & 10231 & 89.4\% \\ 
+Included & 1214 & 10.6\% \\ 
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\vspace{.05em}
+Note: Four references returned an error in AIScreenR; these were manually reviewed and categorized as excluded\\
+\end{minipage}
+
+}
+
+\end{table}%
+
+Now that the data are clean with unique values of either included and
+excluded by \texttt{AIScreenR}, we can proceed to the analysis.
+
+\subsection{Analyzing the results}\label{analyzing-the-results}
+
+\texttt{AIScreenR} (and other AI tools) is seen as a diagnostic tool,
+detecting relevant references for the review question and excluding
+irrelevant ones. There are two primary entries: the binary
+inclusion/exclusion decisions made by the HZV team (human reviewers) and
+those made by \texttt{AIScreenR}. This comparison results in a 2x2
+table, which we refer to as a `Confusion Matrix' (Ghosh 2022).
+
+\subsubsection{Confusion matrix}\label{confusion-matrix}
+
+A confusion matrix is a visual tool, a table, that allows us to evaluate
+the performance of an AI tool (such as \texttt{AIScreenR}) in selecting
+relevant studies (Ghosh 2022). In evidence synthesis, the confusion
+matrix help us in:
+
+\begin{itemize}
+\item
+  Error Analysis: Identifying misclassification patterns.
+\item
+  Bias Detection: Understanding the balance between False Negatives (FN)
+  and False Positives (FP).
+\item
+  LLM Selection: Comparing different models based on their screening
+  performance.
+\item
+  Fine-tuning: Evaluating how the LLMs respond to different prompting
+  approaches.
+\end{itemize}
+
+The confusion matrix visualizes the following metrics:
+
+\begin{itemize}
+\item
+  \textbf{True Positives (TP):} Correctly included references.
+\item
+  \textbf{True Negatives (TN):} Correctly excluded references. This is
+  vital for workload savings.
+\item
+  \textbf{False Positives (FP):} Incorrectly included references
+  (\emph{Type I error}); references the AI included but humans excluded.
+\item
+  \textbf{False Negatives (FN):} Incorrectly excluded references
+  (\emph{Type II error/Miss Rate}). This is the \emph{most critical
+  metric}, as it represents the relevant references the review team
+  would have lost without human verification.
+\end{itemize}
+
+To prepare the key metrics for the confusion matrix, we retrieve the raw
+data (the distribution of decisions made by both \texttt{AIScreenR} and
+humans), organize these into a data frame, and then generate the
+confusion matrix table.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Retrieve and prepare the raw data.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Organize the data in a data frame.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Plotting the confusion matrix table.
+\end{enumerate}
+
+The evaluation of the HZV screening process (n = 11,445 references from
+the searches) is shown in Table~\ref{tbl-confusion-matrix}.
+
+\begin{table}
+
+\caption{\label{tbl-confusion-matrix}Confusion matrix AIScreenR vs HZV
+team}
+
+\centering{
+
+\caption*{
+{\fontsize{20}{25}\selectfont  Confusion matrix AIScreenR vs HZV team\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Performance analysis in study selection\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rr}
+\toprule
+ & \multicolumn{2}{c}{{AIScreenR}} \\ 
+\cmidrule(lr){2-3}
+Human reviewers & Included & Excluded \\ 
+\midrule\addlinespace[2.5pt]
+Included & 75 & 48 \\ 
+Excluded & 1138 & 10171 \\ 
+\midrule 
+\midrule 
+Total & 1,213 & 10,219 \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+Interpreting the results:
+
+\begin{itemize}
+\item
+  \textbf{True Negatives (TN)=} 10,171 references (88.9\%) were
+  correctly excluded by both the HZV team and \texttt{AIScreenR}. In
+  other words, \texttt{AIScreenR} safely removed 89\% of the irrelevant
+  records.
+\item
+  \textbf{False Negatives (FN) =} 48 references (0.4\%) included by the
+  HZV team but missed by \texttt{AIScreenR}.
+\item
+  \textbf{True Positives (TP) =} 75 references. These are the relevant
+  studies correctly identified by both HZV team and \texttt{AIScreenR}.
+\item
+  \textbf{False Positives (FP) =} 1,138 references were included by
+  \texttt{AIScreenR} but excluded by the HZV team. This represents the
+  \emph{``residual manual workload''} (i.e., the 1,138 papers the review
+  team still needs to check manually to ensure they are truly
+  irrelevant).
+\end{itemize}
+
+\subsubsection{Key performance metrics}\label{key-performance-metrics}
+
+Based on the key performance metrics in the confusion matrix, we can now
+estimate the accuracy and the recall.
+
+\paragraph{Recall (Sensitivity)}\label{recall-sensitivity}
+
+Recall represents the proportion of truly relevant references that were
+correctly identified and included by \texttt{AIScreenR}. This is
+critical metric as it measures the \texttt{AIScreenR}'s ability to find
+``all the needles in the haystack.'' A high recall ensures that no
+relevant studies are missed during the screening process.
+
+\paragraph{Accuracy}\label{accuracy}
+
+Accuracy is the proportion of all decisions made by \texttt{AIScreenR}
+(both inclusions and exclusions) that were correct. While informative,
+accuracy can sometimes be misleading in systematic reviews if the number
+of irrelevant papers vastly outweighs the relevant ones (class
+imbalance).
+
+The \texttt{screen\_analyzer} function in \texttt{AIScreenR} calculates
+both recall and accuracy Table~\ref{tbl-HZV-performance}.
+
+\begin{table}
+
+\caption{\label{tbl-HZV-performance}Performance metrics of AIScreenR
+results}
+
+\centering{
+
+\caption*{
+{\fontsize{20}{25}\selectfont  Performance metrics of AIScreenR results\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Comparative performance of AIScreenR in screening references at the title and abstract level on herpes zoster vaccination as the gold-standard comparative benchmark\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{0.8\linewidth}{@{\extracolsep{\fill}}lrr}
+\toprule
+gpt-4o-mini & Recall (Sensitivity) & Specificity \\ 
+\midrule\addlinespace[2.5pt]
+gpt-4o-mini & 61.0\% & 89.9\% \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+\paragraph{Specificity}\label{specificity}
+
+Specificity measures the proportion of truly irrelevant references that
+were correctly excluded by \texttt{AIScreenR}. Unlike Recall that
+focuses on finding what is relevant, Specificity focuses on accurately
+``clearing out'' the noise. High specificity reduces the number of
+irrelevant references that researchers must manually double-check.
+
+\paragraph{Workload Savings}\label{workload-savings}
+
+Workload savings quantifies the efficiency gain provided by
+\texttt{AIScreenR}, expressed as the percentage of the total references
+that the review team no longer needs to screen manually because
+\texttt{AIScreenR} correctly excluded. This metric directly reflects the
+time and resource reduction achieved by implementing \texttt{AIScreenR}.
+
+\textbf{?@tbl-keymetrics} presents the key performance metrics of
+\texttt{AIScreenR} in screening the studies compared to the HZV team.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4444}}@{}}
+\caption{Key performance metrics in screening of AIScreenR vs HZV
+team}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Recall (Sensitivity) & 61.0\% & The most vital metric for quality. It
+shows that \texttt{AIScreenR} captured 61\% of the relevant references.
+The remaining 39\% (the 48 False Negatives) were missed. \\
+Accuracy & 89.5\% & The overall proportion of correct decisions (both
+inclusions and exclusions) made by \texttt{AIScreenR}. While high,
+accuracy can be misleading in imbalanced datasets. \\
+Specificity & 89.9\% & The ability of \texttt{AIScreenR} to correctly
+identify and discard irrelevant studies. A 90\% specificity is excellent
+for significantly narrowing down a large library. \\
+Workload savings & 89.4\% & The ``Efficiency Gain.'' It measures the
+percentage of the total library that the HZV team was able to skip
+screening entirely thanks to \texttt{AIScreenR.} \\
+\end{longtable}
+
+\section{Conclusions}\label{conclusions}
+
+\begin{itemize}
+\item
+  \texttt{AIScreenR} should be used to prioritize screening rather than
+  replacing human review entirely.
+\item
+  \texttt{AIScreenR} identified 61\% of the references included by the
+  HZV team, meaning it overlooked 48 relevant studies. This recall
+  should be higher (at least 75\% before full implementation in evidence
+  synthesis workflows).
+\item
+  \texttt{AIScreenR} resulted in a workload reduction of nearly 90\%
+  during the tittle and abstract screening of the 11,445 references
+  retrieved from the databases.
+\item
+  The HZV team could have safely excluded 90\% of the total references
+  by using \texttt{AIScreenR}.
+\end{itemize}
+
+\section{False Negative Analysis}\label{false-negative-analysis}
+
+To address the low recall observed in the initial \texttt{AIScreenR}
+screening, we must analyze the False Negatives (FNs) to identify
+potential improvements for the prompt. The FNs are those relevant
+studies that \texttt{AIScreenR} excluded but the humans had included.
+
+A refined prompt should, in theory, improve \texttt{AIScreenR}'s recall
+by providing the LLM with clearer inclusion and exclusion boundaries.
+
+\subsection{Select the False
+Negatives}\label{select-the-false-negatives}
+
+The unit of analysis at this stage consists of all False Negatives
+identified in the screening confusion matrix. We must create a dedicated
+variable containing these FNs to systematically inspect the exclusion
+reasons provided by \texttt{AIScreenR} Table~\ref{tbl-confusion-matrix}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create the groups in the confusion matrix: TP, TN, FN, FP}
+\NormalTok{HZV\_screening\_excel }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/Users/JOFM/OneDrive {-} Folkehelseinstituttet/Research projects/FHI/Smittevern/VVP/Helvetesild\_testing/HZV\_screening\_excel.xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: Expecting logical in V1147 / R1147C22: got 'The study's focus on
+varicella vaccination and diagnostic accuracy of self-reported history does not
+align with the inclusion criteria related to zoster vaccination.'
+\end{verbatim}
+
+\begin{verbatim}
+Warning: Expecting logical in X10994 / R10994C24: got '0'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_confusion}\OtherTok{\textless{}{-}}\NormalTok{ HZV\_screening\_excel}\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# new object}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{result\_type =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{    human\_code }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ decision\_binary }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"True Positive (TP)"}\NormalTok{,}
+\NormalTok{    human\_code }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\&}\NormalTok{ decision\_binary }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\textasciitilde{}} \StringTok{"True Negative (TN)"}\NormalTok{,}
+\NormalTok{    human\_code }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\&}\NormalTok{ decision\_binary }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"False Positive (FP)"}\NormalTok{,}
+\NormalTok{    human\_code }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ decision\_binary }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\textasciitilde{}} \StringTok{"False Negative (FN)"}
+\NormalTok{  ))}
+\FunctionTok{view}\NormalTok{(HZV\_confusion)}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_confusion, }\StringTok{"HZV\_confusion.rds"}\NormalTok{)}
+
+\CommentTok{\# Extract the FNs from "HZV\_confusion"}
+\NormalTok{HZV\_FN}\OtherTok{\textless{}{-}}\NormalTok{ HZV\_confusion}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(result\_type}\SpecialCharTok{==} \StringTok{"False Negative (FN)"}\NormalTok{) }
+\FunctionTok{view}\NormalTok{(HZV\_FN)}
+\CommentTok{\# This is the new variable containing all the False Negatives(FNs).}
+
+\NormalTok{writexl}\SpecialCharTok{::}\FunctionTok{write\_xlsx}\NormalTok{(HZV\_FN, }\StringTok{"HZV\_FN.xlsx"}\NormalTok{)}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_FN, }\StringTok{"HZV\_FN.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+With the False Negatives now stored in an object called `HZV\_FN', we
+will export this dataset to review the exclusion reasons provided by
+AIScreenR (column ``detailed\_description''). This analysis will
+directly inform the necessary refinements to our screening prompt.
+
+\subsection{Tuning the prompt}\label{tuning-the-prompt}
+
+Analysis of the exclusion reasons revealed that GPT-4o (via AIScreenR)
+incorrectly excluded references that did not specify the vaccine type,
+did not limit participants to a specific age group, focused on vaccine
+safety and studies on varicella/chickenpox vaccines.
+
+The revised and tuned prompt is now saved as a new variable in our R
+environment.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_prompt\_tuned}\OtherTok{\textless{}{-}}\StringTok{"Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. }
+\StringTok{Task: Evaluate whether a study meets the following specific inclusion criteria. }
+\StringTok{Population: Adults of any age (18 years and older), with a specific focus on including middle{-}aged, older adults, and the elderly (e.g., 60–70 years, 80+ years, and beyond). Include individuals regardless of:  }
+\StringTok{Vaccination History: Including those with or without a previous history of vaccination (e.g., varicella/chickenpox). }
+\StringTok{Medical History: Including those with or without prior episodes of herpes zoster. }
+\StringTok{Health Status: Including participants with or without existing comorbidities or chronic conditions. This encompasses healthy populations as well as participants with conditions such as cardiovascular disease, organ or stem cell transplantation, Alzheimer’s disease, or other immunocompromising factors. }
+\StringTok{Intervention: Studies evaluating the effectiveness and safety of either the Recombinant Zoster Vaccine (RZV; e.g., Shingrix, HZ/su), the Zoster Vaccine Live (ZVL; e.g., Zostavax), or unspecified zoster vaccines, such as those evaluated in national vaccination programs. }
+\StringTok{Comparison/Control: Placebo, no vaccine, or alternative vaccines (including head{-}to{-}head comparisons between RZV and ZVL). }
+\StringTok{Study Design: Randomized controlled trials (RCTs), non{-}randomized studies, and observational studies (prospective/retrospective cohort, population{-}based, registry{-}based, quasi{-}experimental, case{-}control, and nested case{-}control). Systematic reviews, meta{-}analyses, and post{-}marketing safety evaluations are also eligible. }
+\StringTok{Exclude the following: Commentaries, narrative reviews, case studies, and case series. }
+\StringTok{Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied.}
+\StringTok{If you are uncertain about the inclusion of a study or if the study shows signs that the full text might meet the inclusion criteria,}
+\StringTok{choose INCLUDE to minimize the risk of missing relevant studies."}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Running the screening}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Screening command}
+\CommentTok{\#HZV\_FN\_screening \textless{}{-} tabscreen\_gpt(  }
+  \CommentTok{\#data = HZV\_FN,}
+  \CommentTok{\#prompt = HZV\_prompt\_tuned,}
+  \CommentTok{\#title = title,}
+  \CommentTok{\#abstract = abstract,}
+  \CommentTok{\#studyid = ID,}
+  \CommentTok{\#model = "gpt{-}4o{-}mini",}
+  \CommentTok{\#decision\_description = TRUE,}
+  \CommentTok{\#max\_tries = 10,}
+  \CommentTok{\#reps = 1}
+  \CommentTok{\#)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Analyzing the results}
+
+To evaluate the impact of the tuned prompt, we measured the reduction in
+False Negatives (FNs). This is calculated by subtracting the new FNs
+(tuned) from the FNs in the initial screening. This equals the prompt's
+effectiveness in capturing previously missed relevant references,
+thereby improving recall.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#HZV\_FN\_screening$answer\_data\%\textgreater{}\%  \#view the results}
+  \CommentTok{\#count(decision\_binary) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The previous number of FNs in HZV\_confusion\_final was 48.
+\item
+  HZV\_tuned\_screening = AIScreenR using GPT-4o-mini included 29 (TPs)
+  references and excluded 19 references (FNs).
+\item
+  FN reduction = 29 references (60\% FN reduction rate).
+\end{itemize}
+
+\textbf{\emph{The fine-tuned prompt reduced the FNs rate by 60\%.}}
+
+\subsection{False Negative analysis using
+GPT-5-mini}\label{false-negative-analysis-using-gpt-5-mini}
+
+We evaluate the comparative performance of OpenAI's recent model,
+GPT-5-mini, which is optimized for high-volume requests and offers
+greater speed than GPT-4o-mini. According to OpenAI's technical
+documentation
+(\href{https://developers.openai.com/api/docs/models}{ref}), GPT-5-mini
+excels in efficiency, featuring a 400K token context window, which is a
+significant increase over the 128K window found in GPT-4o-mini.
+
+To validate the performance of GPT-5-mini in controlling false negatives
+(FNs), we re-ran the original prompt on the identified FN cases and
+switched the model variable to GPT-5-mini, and compared the results.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#HZV\_FN\_gpt5\_screening \textless{}{-} tabscreen\_gpt(  }
+ \CommentTok{\#data = HZV\_FN,}
+  \CommentTok{\#prompt = HZV\_prompt\_tuned,}
+  \CommentTok{\#studyid = ID,}
+  \CommentTok{\#title = title,}
+  \CommentTok{\#abstract = abstract,}
+  \CommentTok{\#model = "gpt{-}5{-}mini",}
+  \CommentTok{\#reps = 1,}
+  \CommentTok{\#decision\_description = TRUE}
+  \CommentTok{\#)}
+
+\CommentTok{\# Distribution of LLM{-}generated screening decisions}
+\NormalTok{HZV\_FN\_gpt5\_screening }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"HZV\_FN\_gpt5\_screening.rds"}\NormalTok{)}
+
+\NormalTok{HZV\_FN\_gpt5\_screening}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary) }\CommentTok{\#Checking the raw numbers}
+
+\FunctionTok{view}\NormalTok{(HZV\_FN\_gpt5\_screening}\SpecialCharTok{$}\NormalTok{answer\_data) }\CommentTok{\# inspect the data}
+
+\CommentTok{\#Saving the results file}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_FN\_gpt5\_screening, }\StringTok{"HZV\_FN\_gpt5\_screening.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+GPT-5-mini included 33 FN references (69\% FN reduction rate), relative
+to the 29 references included by GPT-4o-mini (60\% FN reduction rate).
+This represents a 9\% screening performance gain.
+
+\section{\texorpdfstring{\textbf{HZV screening
+2}}{HZV screening 2}}\label{hzv-screening-2}
+
+The fine-tuned prompt, which improved screening performance during False
+Negative Analysis, can now be used to re-run the screening process. This
+iteration is expected to enhance the overall recall of
+\texttt{AIScreenR} by reducing the False Negatives.
+
+The impact of the fine-tuned prompt will be evaluated uysing both
+gpt-4o-mini and gpt-5-mini.
+
+\subsection{HZV screening 2 using
+gpt-4o-mini}\label{hzv-screening-2-using-gpt-4o-mini}
+
+Running the screening using the fine-tuned prompt:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#HZV\_screening2 \textless{}{-} tabscreen\_gpt(}
+  \CommentTok{\#data = HZV\_references,     \#The same set of references.}
+  \CommentTok{\#prompt = HZV\_prompt\_tuned, \#This is the tuned prompt.}
+  \CommentTok{\#studyid = ID,}
+  \CommentTok{\#title = title,}
+  \CommentTok{\#abstract = abstract,}
+  \CommentTok{\#model = "gpt{-}4o{-}mini",}
+  \CommentTok{\#reps = 1,}
+  \CommentTok{\#decision\_description = TRUE}
+  \CommentTok{\#)}
+\end{Highlighting}
+\end{Shaded}
+
+In \textbf{HZV screening 2 using gpt-4o-mini}, \texttt{AIScreenR}
+included 1,368 and excluded 10,077 references.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_screening2 }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"HZV\_screening2.rds"}\NormalTok{)}
+
+\CommentTok{\#Saving the results file}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_screening2, }\StringTok{"HZV\_screening2.rds"}\NormalTok{)}
+
+\CommentTok{\# Preview of the screening results data.}
+\FunctionTok{view}\NormalTok{(HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data) }\CommentTok{\# inspect the data}
+
+\CommentTok{\# Distribution of LLM{-}generated screening decisions}
+\NormalTok{HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary)}
+
+\CommentTok{\#Assign 0 to the references with NA (n=4)}
+\NormalTok{HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary[}\FunctionTok{is.na}\NormalTok{(HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary)]}\OtherTok{\textless{}{-}}\DecValTok{0}
+
+\CommentTok{\#Check}
+\NormalTok{HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary)}
+
+\NormalTok{writexl}\SpecialCharTok{::}\FunctionTok{write\_xlsx}\NormalTok{(HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data, }\StringTok{"HZV\_screening2.xlsx"}\NormalTok{) }\CommentTok{\# Export to Excel}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Confusion matrix}\label{confusion-matrix-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Preparing the raw data for the confusion matrix.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Preparing the raw data for the metrics:}
+\NormalTok{HZV\_confusion2 }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}
+  \AttributeTok{Human =}\NormalTok{ HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{human\_code,}
+  \AttributeTok{AI =}\NormalTok{ HZV\_screening2}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary}
+\NormalTok{)}
+\FunctionTok{print}\NormalTok{(HZV\_confusion2)}
+\FunctionTok{view}\NormalTok{(HZV\_confusion2)}
+\FunctionTok{colnames}\NormalTok{(HZV\_confusion2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Organizing the data in a data frame.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Converting the raw data of the confusion matrix to a data frame (mandatory step in dplyr)}
+\NormalTok{HZV\_confusion2\_df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(HZV\_confusion2)}
+\FunctionTok{colnames}\NormalTok{(HZV\_confusion2\_df) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"human\_code"}\NormalTok{, }\StringTok{"decision\_binary"}\NormalTok{, }\StringTok{"n"}\NormalTok{)}
+
+\NormalTok{HZV\_confusion2\_final }\OtherTok{\textless{}{-}}\NormalTok{ HZV\_confusion2\_df }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# using the dataframe (df)}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Human =} \FunctionTok{if\_else}\NormalTok{(human\_code }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"Included"}\NormalTok{, }\StringTok{"Excluded"}\NormalTok{),}
+    \AttributeTok{AIScreenR =} \FunctionTok{if\_else}\NormalTok{(decision\_binary }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"Included"}\NormalTok{, }\StringTok{"Excluded"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{id\_cols =}\NormalTok{ Human,}\AttributeTok{names\_from =}\NormalTok{ AIScreenR,}\AttributeTok{values\_from =}\NormalTok{ n)}
+\FunctionTok{View}\NormalTok{(HZV\_confusion2\_final)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Plotting the confusion matrix
+\end{enumerate}
+
+The evaluation of the \textbf{HZV screening 2 using}
+\textbf{gpt-4o-mini} (n = 11,445 references from the searches) is shown
+in Table~\ref{tbl-confusion-matrix2_gpt4omini}.
+
+\begin{table}
+
+\caption{\label{tbl-confusion-matrix2_gpt4omini}Confusion matrix
+AIScreenR vs HZV team - tuned prompt using gpt-4o-mini}
+
+\centering{
+
+\caption*{
+{\fontsize{20}{25}\selectfont  Confusion matrix AIScreenR vs HZV team - tuned prompt\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Performance analysis in study selection\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rr}
+\toprule
+ & \multicolumn{2}{c}{{AIScreenR}} \\ 
+\cmidrule(lr){2-3}
+Human reviewers & Included & Excluded \\ 
+\midrule\addlinespace[2.5pt]
+Included & 96 & 27 \\ 
+Excluded & 1271 & 10038 \\ 
+\midrule 
+\midrule 
+Total & 1,367 & 10,065 \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+Interpreting the results of \textbf{HZV screening 2 using gpt4-o-mini}:
+
+\begin{itemize}
+\item
+  \textbf{True Negatives (TN)=} 10,038 references (88\%) were correctly
+  excluded by both the HZV team and \texttt{AIScreenR}. In other words,
+  \texttt{AIScreenR} safely removed 89\% of the irrelevant records.
+\item
+  \textbf{False Negatives (FN) =} 27 references (0.2\%) included by the
+  HZV team but missed by \texttt{AIScreenR}.
+\item
+  \textbf{True Positives (TP) =} 96 references. These are the relevant
+  studies correctly identified by both HZV team and \texttt{AIScreenR}.
+\item
+  \textbf{False Positives (FP) =} 1,271 references were included by
+  \texttt{AIScreenR} but excluded by the HZV team. This represents the
+  \emph{``residual manual workload''} (i.e., the 1,271 papers the review
+  team still needs to check manually to ensure they are truly
+  irrelevant).
+\end{itemize}
+
+\subsubsection{Key performance metrics}\label{key-performance-metrics-1}
+
+We estimate the accuracy and the recall of the fine-tuned screening
+using the \texttt{screen\_analyzer} function in \texttt{AIScreenR}
+\textbf{?@tbl-keymetricstuned}.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4444}}@{}}
+\caption{Key performance metrics in screening of AIScreenR vs HZV team:
+HZV screening 2 using gpt4-o-mini.}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Recall (Sensitivity) & 78\% & \texttt{AIScreenR} correctly identifies
+78\% of actually included references. \\
+Accuracy & 89\% & Overall, \texttt{AIScreenR} correctly classifies 89\%
+of all references. \\
+Specificity & 89\% & \texttt{AIScreenR} correctly identifies 89\% of
+actually excluded references. \\
+Workload savings & 89\% & The HZV team would have skipped the manual
+screening of 10,038 references (89\%) by using \texttt{AIScreenR}. \\
+\end{longtable}
+
+\subsection{Full screening using
+gpt-5-mini}\label{full-screening-using-gpt-5-mini}
+
+Running the screening using the fine-tuned prompt:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#HZV\_screening\_5gpt \textless{}{-} tabscreen\_gpt(}
+  \CommentTok{\#data = HZV\_references,}
+  \CommentTok{\#prompt = HZV\_prompt\_tuned,}
+  \CommentTok{\#studyid = ID,}
+  \CommentTok{\#title = title,}
+  \CommentTok{\#abstract = abstract,}
+  \CommentTok{\#model = "gpt{-}5{-}mini",}
+  \CommentTok{\#reps = 1,}
+  \CommentTok{\#decision\_description = TRUE}
+\CommentTok{\#)}
+\end{Highlighting}
+\end{Shaded}
+
+Inspecting the screening results:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HZV\_screening\_5gpt }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"HZV\_screening\_5gpt.rds"}\NormalTok{)}
+\CommentTok{\# Preview of the screening results data.}
+\FunctionTok{view}\NormalTok{(HZV\_screening\_5gpt}\SpecialCharTok{$}\NormalTok{answer\_data) }\CommentTok{\# inspect the data}
+
+\CommentTok{\# Distribution of LLM{-}generated screening decisions}
+\NormalTok{HZV\_screening\_5gpt}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{count}\NormalTok{(decision\_binary)}
+
+\CommentTok{\#Saving the results file}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_screening\_5gpt, }\StringTok{"HZV\_screening\_5gpt.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+In \textbf{HZV screening 2 using gpt-5-mini}, \texttt{AIScreenR}
+excluded 9,366 references and included 2,079. Of note, \emph{two}
+references were marked as `NA' by the software. We checked these
+manually and reclassified them as excluded (0) as they are not deemed
+relevant to the study.\\
+
+\subsubsection{Confusion matrix}\label{confusion-matrix-2}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Preparing the raw data for the confusion matrix.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Preparing the raw data for the metrics:}
+\NormalTok{HZV\_confusion2\_gpt5 }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{( }\AttributeTok{Human =}\NormalTok{ HZV\_screening\_5gpt}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{human\_code, }\AttributeTok{AI =}\NormalTok{ HZV\_screening\_5gpt}\SpecialCharTok{$}\NormalTok{answer\_data}\SpecialCharTok{$}\NormalTok{decision\_binary)}
+\FunctionTok{print}\NormalTok{(HZV\_confusion2\_gpt5)}
+\FunctionTok{colnames}\NormalTok{(HZV\_confusion2\_gpt5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Organizing the data in a data frame.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Converting the raw data of the confusion matrix to a data frame (mandatory step in dplyr)}
+\NormalTok{HZV\_confusion2\_gpt5 }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(HZV\_confusion2\_gpt5)}
+\FunctionTok{colnames}\NormalTok{(HZV\_confusion2\_gpt5) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"human\_code"}\NormalTok{, }\StringTok{"decision\_binary"}\NormalTok{, }\StringTok{"n"}\NormalTok{)}
+
+\NormalTok{HZV\_confusion2\_gpt5\_final }\OtherTok{\textless{}{-}}\NormalTok{ HZV\_confusion2\_gpt5 }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# using the dataframe (df)}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Human =} \FunctionTok{if\_else}\NormalTok{(human\_code }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"Included"}\NormalTok{, }\StringTok{"Excluded"}\NormalTok{),}
+    \AttributeTok{AIScreenR =} \FunctionTok{if\_else}\NormalTok{(decision\_binary }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"Included"}\NormalTok{, }\StringTok{"Excluded"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{id\_cols =}\NormalTok{ Human,}\AttributeTok{names\_from =}\NormalTok{ AIScreenR,}\AttributeTok{values\_from =}\NormalTok{ n)}
+\FunctionTok{View}\NormalTok{(HZV\_confusion2\_gpt5\_final)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Plotting the confusion matrix
+\end{enumerate}
+
+The evaluation of the \textbf{HZV screening 2 using gpt-5-mini} is shown
+in Table~\ref{tbl-HZV_confusion2_gpt5}.
+
+\begin{table}
+
+\caption{\label{tbl-HZV_confusion2_gpt5}Confusion matrix AIScreenR vs
+HZV team - tuned prompt using gpt-5-mini}
+
+\centering{
+
+\caption*{
+{\fontsize{20}{25}\selectfont  Confusion matrix AIScreenR vs HZV team - tuned prompt using gpt-5-mini\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Performance analysis in study selection\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rr}
+\toprule
+ & \multicolumn{2}{c}{{AIScreenR}} \\ 
+\cmidrule(lr){2-3}
+Human reviewers & Included & Excluded \\ 
+\midrule\addlinespace[2.5pt]
+Included & 107 & 16 \\ 
+Excluded & 1972 & 9337 \\ 
+\midrule 
+\midrule 
+Total & 2,079 & 9,353 \\ 
+\bottomrule
+\end{tabular*}
+
+}
+
+\end{table}%
+
+Interpreting the results of \textbf{HZV screening 2 using gpt-5-mini}:
+
+\begin{itemize}
+\item
+  \textbf{True Negatives (TN)=} 9,337 references (82\%) were correctly
+  excluded by both the HZV team and \texttt{AIScreenR}. In other words,
+  \texttt{AIScreenR} safely removed 82\% of the irrelevant records.
+\item
+  \textbf{False Negatives (FN) =} 16 references (0.14\%) included by the
+  HZV team but missed (or wrongly excluded) by \texttt{AIScreenR}.
+\item
+  \textbf{True Positives (TP) =} 107 references. These are the relevant
+  studies correctly identified by both HZV team and \texttt{AIScreenR}.
+\item
+  \textbf{False Positives (FP) =} 1,972 references (17\%) were included
+  by \texttt{AIScreenR} but excluded by the HZV team. This represents
+  the \emph{``residual manual workload''} (i.e., the 1,972 papers the
+  review team still needs to check manually to ensure they are truly
+  irrelevant).
+\end{itemize}
+
+\subsubsection{Key performance metrics (HZV screening 2 using
+gpt-5-mini)}\label{key-performance-metrics-hzv-screening-2-using-gpt-5-mini}
+
+We estimate the accuracy and the recall of the fine-tuned screening
+using \texttt{screen\_analyzer} function in \texttt{AIScreenR}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Run the analyzer function to estimate the metrics}
+\NormalTok{HZV\_5gpt\_analysis}\OtherTok{\textless{}{-}}\FunctionTok{screen\_analyzer}\NormalTok{(HZV\_screening\_5gpt, }\AttributeTok{human\_decision =}\NormalTok{ human\_code)}
+\NormalTok{HZV\_5gpt\_analysis}
+
+\CommentTok{\# Saving the analysis of the screening results}
+\FunctionTok{saveRDS}\NormalTok{(HZV\_5gpt\_analysis, }\StringTok{"HZV\_5gpt\_analysis.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2941}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1471}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5588}}@{}}
+\caption{Key performance metrics in screening of AIScreenR vs HZV team:
+HZV screening 2 using gpt-5-mini.}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Performance metric
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Recall (Sensitivity) & 87\% & \texttt{AIScreenR} correctly identifies
+87\% of actually included references. \\
+Accuracy & 83\% & Overall, \texttt{AIScreenR} correctly classifies 83\%
+of all references. \\
+Specificity & 83\% & \texttt{AIScreenR} correctly identifies 83\% of
+actually excluded references. \\
+Workload savings & 82\% & The HZV team would have skipped the manual
+screening of 9,337 references (82\%) by using \texttt{AIScreenR}. \\
+\end{longtable}
+
+xxx
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# }
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Conclusion}\label{conclusion}
+
+The recall and specificity values align with the recommendations of
+Vembye et al. (Vembye et al. 2025) for a trustworthy an valid use of
+\texttt{AIScreenR} in evidence synthesis. The results of the fine-tuning
+of the prompt fine-tuning demonstrated that \texttt{AIScreenR} can
+safely be used as a second screener for title and abstract screening in
+an evidence synthesis, such as the one conducted by the HZV team.
+
+con el 5 mini tendrian que leer solo 2079 de las 11,445 para identificar
+los
+
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{1}{1}
+\bibitem[\citeproctext]{ref-ghosh2022a}
+Ghosh, Chandril. 2022. \emph{Data Analysis with Machine Learning for
+Psychologists}. Springer International Publishing.
+\url{https://doi.org/10.1007/978-3-031-14634-3}.
+
+\bibitem[\citeproctext]{ref-vembye2025}
+Vembye, Mikkel Helding, Julian Christensen, Anja Bondebjerg Mølgaard,
+and Frederikke Lykke Witthöft Schytt. 2025. {``Generative Pretrained
+Transformer Models Can Function as Highly Reliable Second Screeners of
+Titles and Abstracts in Systematic Reviews: A Proof of Concept and
+Common Guidelines.''} \emph{Psychological Methods}, ahead of print, July
+10. \url{https://doi.org/10.1037/met0000769}.
+
+\end{CSLReferences}
+
+
+
+
+\end{document}
