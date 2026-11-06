@@ -41,7 +41,8 @@ library(chromote)
 library(readxl)
 library(future)
 
-devtools::install_github("MikkelVembye/AIscreenR") # install the most recent pakcage update
+# install the most recent pakcage update
+devtools::install_github("MikkelVembye/AIscreenR")
 ```
 
 Text - example
@@ -51,7 +52,12 @@ Text - example
 This text describes the title/subtitle - it's just an example.
 
 ```{r}
-# usethis::edit_r_environ() # Run this code to open your .Renviron file and  write CHATGPT_KEY=your_key. Thereafter, close and save the .Renviron file and restart RStudio (ctrl + shift + F10). From now on, the AIscreenR functions will automatically use get_api_key() to retrieve your API key from your R environment. 
+usethis::edit_r_environ()
+# Run this code to open your .Renviron file and  write CHATGPT_KEY=your_key
+# Thereafter, close and save the .Renviron file
+# Restart RStudio (ctrl + shift + F10)
+# From now on, AIscreenR will automatically use get_api_key()
+# to retrieve your API key from your R environment.
 
 get_api_key() # To check the API Key was saved successfully.
 ```
