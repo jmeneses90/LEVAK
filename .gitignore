@@ -1,4 +1,4 @@
-﻿# 1. Credentials (never upload)
+# 1. Credentials (never upload)
 .Renviron
 .env
 *.key
@@ -32,3 +32,4 @@ outputs/tmp/
 
 # Backup folder
 backup/
+**/*.quarto_ipynb

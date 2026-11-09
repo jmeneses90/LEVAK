@@ -225,9 +225,6 @@ library(openxlsx)
 library(languageserver)
 
 devtools::install_github("MikkelVembye/AIscreenR") # most recent pakcage updates
-
-#Load data of the project
-load(".RData")
 ```
 
 ### Set API Key
@@ -254,11 +251,13 @@ We import the references that will be screened by `AIscreenR`.
 
 ```{r}
 #| echo: true
-#| warning: false
+#| output: false
 #| message: false
+#| warning: false
 #| results: false
 
-HZV_references<-read_excel("validation/HZV/data/HZV_References.xlsx") # references read. This is the main file from the search results and coded with the screenign decision from the content experts.
+HZV_references<-read_excel("validation/HZV/data/HZV_References.xlsx")
+# references read. This is the main file from the search results and coded with the screenign decision from the content experts.
 
 # In case you want to restrict the dataframe only to the variables required by AIscreenR: 
 # HZV_references <- HZV_references %>% 
@@ -364,7 +363,7 @@ Print the results of the screening done by `AIscreenR`. Check the following vari
 #| echo: true
 #| results: false
 
-HZV_screening <- readRDS("validation/HZV/otuputs/HZV_screening.rds") # load the screening results
+HZV_screening <- readRDS("validation/HZV/outputs/HZV_screening.rds") # load the screening results
 
 # Preview of the screening results data.
 view(HZV_screening$answer_data) # inspect the data
@@ -609,10 +608,9 @@ Workload savings quantifies the efficiency gain provided by `AIscreenR`, express
 | Specificity | 89.9% | The ability of `AIscreenR` to correctly identify and discard irrelevant studies. A 90% specificity is excellent for significantly narrowing down a large library. |
 | Workload savings | 89.4% | The "Efficiency Gain." It measures the percentage of the total library that the HZV team was able to skip screening entirely thanks to `AIscreenR.` |
 
-: Key performance metrics in screening of AIScreenR vs HZV team
+: Key performance metrics in screening of AIScreenR vs HZV team {#tbl-keymetrics}
 
-
-NOTE: The LEVAK team will add the results of the screening performance analysis from the screen_analyzer function in `AIscreenR`. 
+NOTE: The LEVAK team will soon add the results of the screening performance analysis from the screen_analyzer function in `AIscreenR`. 
 
 
 # Conclusions (HZV screening 1)
@@ -728,8 +726,8 @@ To evaluate the impact of the optimised prompt, we measured the reduction in Fal
 #| message: false
 #| warning: false
 
-HZV_FN_screening$answer_data%>%  #view the results
-  count(decision_binary) 
+# HZV_FN_screening$answer_data%>%  #view the results
+#   count(decision_binary) 
 ```
 
 - The previous number of FNs in HZV_confusion_final was 48.
@@ -942,7 +940,7 @@ writexl::write_xlsx(HZV_analysis2, "validation/HZV/outputs/HZV_analysis2.xlsx")
 | Specificity | 89% | `AIscreenR` correctly identifies 89% of actually excluded references. |
 | Workload savings | 89% | The HZV team would have skipped the manual screening of 10,038 references (89%) by using `AIscreenR`. |
 
-: Key performance metrics in screening of AIscreenR vs HZV team: HZV screening 2 using gpt4-o-mini
+: Key performance metrics in screening of AIscreenR vs HZV team: HZV screening 2 using gpt4-o-mini {#tbl-keymetricstuned}
 
 ## Full screening using gpt-5-mini
 
@@ -1240,11 +1238,11 @@ saveRDS(HZV_screening_5gpt_2, "validation/HZV/outputs/HZV_screening_5gpt_2.rds")
 class(HZV_screening_5gpt_2) 
 ```
 
-XXX
+Being updated.
 
 ```{r}
-HZV_analysis_it2 <-screen_analyzer(HZV_screening_5gpt_2, human_decision = human_code, key_result = FALSE)
+# HZV_analysis_it2 <-screen_analyzer(HZV_screening_5gpt_2, human_decision = human_code, key_result = FALSE)
 
-view(HZV_analysis_it2)
-saveRDS(HZV_analysis_it2, "validation/HZV/outputs/HZV_analysis_it2.rds")
+# view(HZV_analysis_it2)
+# saveRDS(HZV_analysis_it2, "validation/HZV/outputs/HZV_analysis_it2.rds")
 ```
