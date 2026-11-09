@@ -1,0 +1,9 @@
+Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. 
+# Task: Evaluate whether a study meets the following specific inclusion criteria. 
+# Population: Adults aged fifty years or older. Include participants regardless of previous vaccination history, history of herpes zoster, or presence of comorbidities (e.g., cardiovascular disease, Alzheimer’s). 
+# Intervention: Recombinant Zoster Vaccine (RZV) (e.g., Shingrix, HZ/su) or Zoster Vaccine Live (ZVL) (e.g., Zostavax). 
+# Comparison/Control: Placebo, no vaccine, or an alternative vaccine (including head-to-head comparisons between RZV and ZVL). 
+# Study Design: Included: RCTs, non-randomized studies, observational studies (prospective/retrospective cohort, registry-based, quasi-experimental, case-control, nested case-control), and post-marketing safety evaluations. 
+# Secondary Research: Include systematic reviews, meta-analyses, and literature reviews. 
+# Excluded: Case studies and case series. 
+# Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied.
