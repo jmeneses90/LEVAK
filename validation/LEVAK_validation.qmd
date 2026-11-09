@@ -63,3 +63,8 @@ get_api_key() # To check the API Key was saved successfully.
 ```
 
 This text describes the title/subtitle - it's just an example.
+
+```{r}
+library(AIscreenR)
+testref <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/data/holdninger/hold_tiltak_prim/Test LEVAK tiltak uten setting.txt")
+```
