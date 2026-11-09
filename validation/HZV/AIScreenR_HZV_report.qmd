@@ -1,6 +1,8 @@
 ---
-title: "AIscreenR as a Second Screener in Evidence Synthesis: A Proof of Concept Using a Health Technology Assessment of Herpes Zoster Vaccination"
+title: "AIscreenR as a Second Screener in LEVAK: A Proof of Concept Using a Health Technology Assessment of Herpes Zoster Vaccination"
 format: 
+  gfm:  
+    output-file: "README.md"
   html: 
     toc: true
   pdf:
@@ -219,6 +221,8 @@ library(rsconnect)
 library(chromote)
 library(readxl)
 library(future)
+library(openxlsx)
+library(languageserver)
 
 devtools::install_github("MikkelVembye/AIscreenR") # most recent pakcage updates
 
@@ -254,15 +258,14 @@ We import the references that will be screened by `AIscreenR`.
 #| message: false
 #| results: false
 
-confusion_helvetesild3_values<- read_excel("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Research projects/FHI/Smittevern/VVP/Helvetesild_testing/confusion_helvetesild3_excel.xlsx") #main file with the references (search results)
+HZV_references<-read_excel("validation/HZV/data/HZV_References.xlsx") # references read. This is the main file from the search results and coded with the screenign decision from the content experts.
 
-HZV_references<-confusion_helvetesild3_values %>% 
-  select(ID, human_code, title, abstract, studyid)
+# In case you want to restrict the dataframe only to the variables required by AIscreenR: 
+# HZV_references <- HZV_references %>% 
+#   select(ID, human_code, title, abstract, studyid)
 
-View(HZV_references) #inspecting the references
-save(HZV_references, file = "HZV_references.RData")
-nrow(HZV_references)
-save.image(file = ".RData")
+# saving the file in the data folder
+saveRDS(HZV_references, "validation/HZV/data/HZV_references.rds")
 ```
 
 ### Missing titles check
@@ -270,14 +273,12 @@ save.image(file = ".RData")
 Missing titles: Use the following code to ensure no references are missing a title.
 
 ```{r}
-sum(is.na(HZV_references$title)) # check missing titles
+sum(is.na(HZV_references$title)) # 0 - All the references have a title (No titles missing).
 ```
-
-All the references have a title (No titles missing).
 
 ### Missing abstract check
 
-The abstract is the primary source of information used by the LLM to determine whether a study meets the inclusion criteria. `AIscreenR`, independent of the specific GPT model employed, tends to exclude references by default when information is insufficient. If a study without an abstract is actually relevant, it may result in a False Negative (key evidence is omitted from the synthesis).
+The abstract is the primary source of information used by the LLM to determine whether a study meets the inclusion criteria. `AIscreenR`, independent of the specific GPT model employed, tends to exclude references by default when information is insufficient (e.g., when the abstract is missing). Therefore, relevant studies without abstracts may result in False Negatives (key evidence is omitted from the synthesis).
 
 Furthermore, the validation metrics for `AIscreenR` assume the LLM has access to the same data as a human reviewer. Empty abstract fields artificially lower the performance scores, leading to biased conclusions regarding the tool's validation.
 
@@ -285,16 +286,16 @@ The abstracts in the database show "No information" instead of "NA". Use this co
 
 ```{r}
 # Verify the "No information" items.
-sum(HZV_references$abstract == "No information", na.rm = TRUE) 
+sum(HZV_references$abstract == "No information", na.rm = TRUE) # 1616 abstracts are missing
 
 # Convert "No information" to a real "NA".
-HZV_references$abstract[HZV_references$abstract == "No information"] <- NA
+# HZV_references$abstract[HZV_references$abstract == "No information"] <- NA
 ```
 
 We can check the number of missing abstracts now:
 
 ```{r}
-sum(is.na(HZV_references$abstract)) # check missing abstracts
+sum(is.na(HZV_references$abstract)) # check missing abstracts = 0 
 ```
 
 Abstracts are missing for 1,616 references, representing 14% of the 11,445 total entries in the EndNote library.
@@ -303,6 +304,8 @@ Abstracts are missing for 1,616 references, representing 14% of the 11,445 total
 
 This is our first, exploratory screening.
 
+**Date**: 25/February/2026. Screening run at NIPH in Oslo, Norway.
+
 ### Prompt (HZV screening 1)
 
 The prompt is the set of instructions that the LLM follows to determine the relevance of each study. It must mirror the selection criteria, defining the key inclusion and exclusion criteria as clearly as possible. To ensure high accuracy, the prompt should be detailed and thorough.
@@ -310,7 +313,7 @@ The prompt is the set of instructions that the LLM follows to determine the rele
 You can draft the prompt in either R or Word before integrating it into the pipeline.
 
 ```{r}
-# HZV_prompt <- "Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. 
+HZV_prompt1 <- "Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. 
 # Task: Evaluate whether a study meets the following specific inclusion criteria. 
 # Population: Adults aged fifty years or older. Include participants regardless of previous vaccination history, history of herpes zoster, or presence of comorbidities (e.g., cardiovascular disease, Alzheimer’s). 
 # Intervention: Recombinant Zoster Vaccine (RZV) (e.g., Shingrix, HZ/su) or Zoster Vaccine Live (ZVL) (e.g., Zostavax). 
@@ -319,6 +322,9 @@ You can draft the prompt in either R or Word before integrating it into the pipe
 # Secondary Research: Include systematic reviews, meta-analyses, and literature reviews. 
 # Excluded: Case studies and case series. 
 # Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied."
+
+# saving the prompt in the corresponding folder
+writeLines(HZV_prompt1, "validation/HZV/prompts/HZV_prompt1")
 ```
 
 ### Screening command
@@ -332,11 +338,11 @@ You can draft the prompt in either R or Word before integrating it into the pipe
 
 #HZV_screening <- tabscreen_gpt(
   #data = HZV_references,
-  #prompt = HZV_prompt,
+  #prompt = HZV_prompt1,
   #studyid = ID,
   #title = title,
   #abstract = abstract,
-  #model = "gpt-5-mini",
+  #model = "gpt-4o-mini",
   #reps = 1,
   #decision_description = TRUE
 #)
@@ -358,7 +364,7 @@ Print the results of the screening done by `AIscreenR`. Check the following vari
 #| echo: true
 #| results: false
 
-HZV_screening <- readRDS("HZV_screening.rds") # load the screening results
+HZV_screening <- readRDS("validation/HZV/otuputs/HZV_screening.rds") # load the screening results
 
 # Preview of the screening results data.
 view(HZV_screening$answer_data) # inspect the data
@@ -367,8 +373,8 @@ view(HZV_screening$answer_data) # inspect the data
 HZV_screening$answer_data %>%  
   count(decision_binary)
 
-#Saving the results file
-saveRDS(HZV_screening, "HZV_screening.rds")
+#Saving the screening results file
+saveRDS(HZV_screening, "validation/HZV/outputs/HZV_screening.rds")
 ```
 
 `AIscreenR` excluded 10,227 references and included 1,214.
@@ -387,7 +393,9 @@ HZV_screening$answer_data %>%
   count(decision_binary)
 ```
 
-After cleaning the data, `AIscreenR` excluded 10,231 references and included 1,214 references @tbl-HZV-screening-rawtable.
+After cleaning the data, `AIscreenR` excluded 10,231 references and included 1,214 references.
+
+@tbl-HZV-screening-rawtable.
 
 ```{r}
 # Data wrangling_row data (first table)
@@ -401,13 +409,13 @@ HZV_screening_rawtable <- HZV_screening$answer_data %>%
 view(HZV_screening_rawtable)
 
 # Saving the object in R and also as Excel
-saveRDS(HZV_screening_rawtable, "HZV_screening_rawtable.rds")
-writexl::write_xlsx(HZV_screening_rawtable, "HZV_screening_rawtable.xlsx")
+saveRDS(HZV_screening_rawtable, "validation/HZV/outputs/HZV_screening_rawtable.rds")
+writexl::write_xlsx(HZV_screening_rawtable, "validation/HZV/outputs/HZV_screening_rawtable.xlsx")
 ```
 
 ```{r}
 #| label: tbl-HZV-screening-rawtable
-#| tbl-cap: "AIScreenR screening results"
+#| tbl-cap: "AIscreenR screening results"
 #| message: false
 #| echo: false
 
@@ -437,7 +445,7 @@ HZV_screening_rawtable_gt
 
 # 3. Save the table to your outputs folder
 # Make sure to include the file extension (.png, .pdf, or .html)
-gtsave(HZV_screening_rawtable_gt, "outputs/HZV_screening_rawtable.png")
+gtsave(HZV_screening_rawtable_gt, "validation/HZV/outputs/HZV_screening_rawtable.png")
 ```
 
 Now that the data are clean with unique values of either included and excluded by `AIscreenR`, we can proceed to the analysis.
@@ -514,10 +522,10 @@ HZV_confusion_final %>%
   opt_stylize(color = "blue", style = 1)
 
 # Saving the Excel file for this table.
-writexl::write_xlsx(HZV_confusion_final, "HZV_confusion_final.xlsx")
+writexl::write_xlsx(HZV_confusion_final, "validation/HZV/outputs/HZV_confusion_final.xlsx")
 ```
 
-Interpreting the results:
+Interpreting the results (`AIscreenR` using gpt-4o-mini):
 
 - **True Negatives (TN)=** 10,171 references (88.9%) were correctly excluded by both the HZV team and `AIscreenR`. In other words, `AIscreenR` safely removed 89% of the irrelevant records.
 
@@ -546,12 +554,12 @@ The `screen_analyzer` function in `AIscreenR` calculates both recall and accurac
 #| results: false
 
 # Run the analyzer function to estimate the metrics
-HZV_analysis<-screen_analyzer(HZV_screening, human_decision = human_code)
+HZV_analysis<-screen_analyzer(HZV_screening, human_decision = human_code, key_result = FALSE)
 View(HZV_analysis)
-HZV_analysis
 
 # Saving the analysis of the screening results
-saveRDS(HZV_analysis, "HZV_analysis.rds")
+saveRDS(HZV_analysis, "validation/HZV/outputs/HZV_analysis.rds")
+writexl::write_xlsx(HZV_analysis, "validation/HZV/outputs/HZV_analysis.xlsx")
 ```
 
 ```{r}
@@ -603,6 +611,10 @@ Workload savings quantifies the efficiency gain provided by `AIscreenR`, express
 
 : Key performance metrics in screening of AIScreenR vs HZV team
 
+
+NOTE: The LEVAK team will add the results of the screening performance analysis from the screen_analyzer function in `AIscreenR`. 
+
+
 # Conclusions (HZV screening 1)
 
 - `AIscreenR` should be used to prioritize screening rather than replacing human review entirely.
@@ -630,7 +642,7 @@ The unit of analysis at this stage consists of all False Negatives identified in
 #| warning: false
 
 # Create the groups in the confusion matrix: TP, TN, FN, FP
-HZV_screening_excel <- read_excel("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Research projects/FHI/Smittevern/VVP/Helvetesild_testing/HZV_screening_excel.xlsx")
+HZV_screening_excel <- read_excel("validation/HZV/outputs/HZV_screening_excel.xlsx")
 
 HZV_confusion<- HZV_screening_excel%>%  # new object
   mutate(result_type = case_when(
@@ -640,7 +652,7 @@ HZV_confusion<- HZV_screening_excel%>%  # new object
     human_code == 1 & decision_binary == 0 ~ "False Negative (FN)"
   ))
 view(HZV_confusion)
-saveRDS(HZV_confusion, "HZV_confusion.rds")
+saveRDS(HZV_confusion, "validation/HZV/outputs/HZV_confusion.rds")
 
 # Extract the FNs from "HZV_confusion"
 HZV_FN<- HZV_confusion%>%
@@ -648,20 +660,23 @@ HZV_FN<- HZV_confusion%>%
 view(HZV_FN)
 # This is the new variable containing all the False Negatives(FNs).
 
-writexl::write_xlsx(HZV_FN, "HZV_FN.xlsx")
-saveRDS(HZV_FN, "HZV_FN.rds")
+HZV_FN <- HZV_FN |> 
+  dplyr::select(ID, title, abstract) #preparing the dataset for the next screening round
+
+writexl::write_xlsx(HZV_FN, "validation/HZV/outputs/HZV_FN.xlsx")
+saveRDS(HZV_FN, "validation/HZV/outputs/HZV_FN.rds")
 ```
 
 With the False Negatives now stored in an object called 'HZV_FN', we will export this dataset to review the exclusion reasons provided by `AIscreenR` (column "detailed_description"). This analysis will directly inform the necessary refinements to our screening prompt.
 
-## Tuning the prompt
+## Prompt optimisation
 
 Analysis of the exclusion reasons revealed that `AIscreenR` incorrectly excluded references that did not specify the vaccine type, did not limit participants to a specific age group, focused on vaccine safety and studies on varicella/chickenpox vaccines.
 
-The revised and tuned prompt is now saved as a new variable in our R environment.
+After implementing these changes in the prompt, the optimised prompt is now saved as a new variable in our R environment, as follows:
 
 ```{r}
-HZV_prompt_tuned<-"Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. 
+HZV_prompt2<-"Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. 
 Task: Evaluate whether a study meets the following specific inclusion criteria. 
 Population: Adults of any age (18 years and older), with a specific focus on including middle-aged, older adults, and the elderly (e.g., 60–70 years, 80+ years, and beyond). Include individuals regardless of:  
 Vaccination History: Including those with or without a previous history of vaccination (e.g., varicella/chickenpox). 
@@ -674,9 +689,13 @@ Exclude the following: Commentaries, narrative reviews, case studies, and case s
 Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied.
 If you are uncertain about the inclusion of a study or if the study shows signs that the full text might meet the inclusion criteria,
 choose INCLUDE to minimize the risk of missing relevant studies."
+
+writeLines(HZV_prompt2, "validation/HZV/prompts/HZV_prompt2") #saving the prompt in the corresponding folder
 ```
 
-**Running the screening**
+**Running the screening using the optimised prompt**
+
+**Date**: 27/February/2026. Screening run at NIPH in Oslo, Norway.
 
 ```{r}
 #| echo: true
@@ -684,22 +703,24 @@ choose INCLUDE to minimize the risk of missing relevant studies."
 #| message: false
 
 # Screening command
-#HZV_FN_screening <- tabscreen_gpt(  
-  #data = HZV_FN,
-  #prompt = HZV_prompt_tuned,
-  #title = title,
-  #abstract = abstract,
-  #studyid = ID,
-  #model = "gpt-4o-mini",
-  #decision_description = TRUE,
-  #max_tries = 10,
-  #reps = 1
-  #)
+# HZV_FN_screening <- tabscreen_gpt(  
+#   data = HZV_FN,
+#   prompt = HZV_prompt2,
+#   title = title,
+#   abstract = abstract,
+#   studyid = ID,
+#   model = "gpt-4o-mini",
+#   decision_description = TRUE,
+#   max_tries = 10,
+#   reps = 1
+#   )
+
+# saveRDS(HZV_FN_screening, "validation/HZV/outputs/HZV_FN_screening.rds")
 ```
 
 **Analyzing the results**
 
-To evaluate the impact of the tuned prompt, we measured the reduction in False Negatives (FNs). This is calculated by subtracting the new FNs (tuned) from the FNs in the initial screening. This equals the prompt's effectiveness in capturing previously missed relevant references, thereby improving recall.
+To evaluate the impact of the optimised prompt, we measured the reduction in False Negatives (FNs). This is calculated by subtracting the new FNs (optimised) from the FNs in the initial screening. This equals the prompt's effectiveness in capturing previously missed relevant references, thereby improving recall.
 
 ```{r}
 #| echo: true
@@ -707,13 +728,13 @@ To evaluate the impact of the tuned prompt, we measured the reduction in False N
 #| message: false
 #| warning: false
 
-#HZV_FN_screening$answer_data%>%  #view the results
-  #count(decision_binary) 
+HZV_FN_screening$answer_data%>%  #view the results
+  count(decision_binary) 
 ```
 
 - The previous number of FNs in HZV_confusion_final was 48.
 
-- HZV_tuned_screening = `AIscreenR` using GPT-4o-mini included 29 (TPs) references and excluded 19 references (FNs).
+- HZV_optimised_screening = `AIscreenR` using GPT-4o-mini included 29 (TPs) references and excluded 19 references (FNs).
 
 - FN reduction = 29 references (60% FN reduction rate).
 
@@ -732,7 +753,7 @@ To validate the performance of GPT-5-mini in controlling false negatives (FNs), 
 
 #HZV_FN_gpt5_screening <- tabscreen_gpt(  
  #data = HZV_FN,
-  #prompt = HZV_prompt_tuned,
+  #prompt = HZV_prompt2,
   #studyid = ID,
   #title = title,
   #abstract = abstract,
@@ -742,7 +763,7 @@ To validate the performance of GPT-5-mini in controlling false negatives (FNs), 
   #)
 
 # Distribution of LLM-generated screening decisions
-HZV_FN_gpt5_screening <- readRDS("HZV_FN_gpt5_screening.rds")
+HZV_FN_gpt5_screening <- readRDS("validation/HZV/outputs/HZV_FN_gpt5_screening.rds")
 
 HZV_FN_gpt5_screening$answer_data %>%  
   count(decision_binary) #Checking the raw numbers
@@ -750,20 +771,21 @@ HZV_FN_gpt5_screening$answer_data %>%
 view(HZV_FN_gpt5_screening$answer_data) # inspect the data
 
 #Saving the results file
-saveRDS(HZV_FN_gpt5_screening, "HZV_FN_gpt5_screening.rds")
+saveRDS(HZV_FN_gpt5_screening, "validation/HZV/outputs/HZV_FN_gpt5_screening.rds")
 ```
 
 GPT-5-mini included 33 FN references (69% FN reduction rate), relative to the 29 references included by GPT-4o-mini (60% FN reduction rate). This represents a 9% screening performance gain.
 
 # **HZV screening 2**
 
-The fine-tuned prompt, which improved screening performance during False Negative Analysis, can now be used to re-run the screening process. This iteration is expected to enhance the overall recall of `AIscreenR` by reducing the False Negatives.
+The optimised prompt ('HZV_prompt2'), which improved screening performance during False Negative Analysis, can now be used to re-run the entire screening process. This iteration is expected to enhance the overall recall of `AIscreenR` by reducing the False Negatives.
 
-The impact of the fine-tuned prompt will be evaluated using both gpt-4o-mini and gpt-5-mini.
+The impact of the optimised prompt will be evaluated using both gpt-4o-mini and gpt-5-mini.
 
 ## HZV screening 2 using gpt-4o-mini
 
-Running the screening using the fine-tuned prompt:
+Running the screening using the optimised prompt:
+**Date**: 27/February/2026. Screening run at NIPH in Oslo, Norway.
 
 ```{r}
 #| echo: true
@@ -774,7 +796,7 @@ Running the screening using the fine-tuned prompt:
 
 #HZV_screening2 <- tabscreen_gpt(
   #data = HZV_references,     #The same set of references.
-  #prompt = HZV_prompt_tuned, #This is the tuned prompt.
+  #prompt = HZV_prompt2, #This is the optimised prompt.
   #studyid = ID,
   #title = title,
   #abstract = abstract,
@@ -793,10 +815,10 @@ In **HZV screening 2 using gpt-4o-mini**, `AIscreenR` included 1,368 and exclude
 #| warning: false
 #| results: hide
 
-HZV_screening2 <- readRDS("HZV_screening2.rds")
+HZV_screening2 <- readRDS("validation/HZV/outputs/HZV_screening2.rds")
 
 #Saving the results file
-saveRDS(HZV_screening2, "HZV_screening2.rds")
+saveRDS(HZV_screening2, "validation/HZV/outputs/HZV_screening2.rds")
 
 # Preview of the screening results data.
 view(HZV_screening2$answer_data) # inspect the data
@@ -805,14 +827,14 @@ view(HZV_screening2$answer_data) # inspect the data
 HZV_screening2$answer_data %>%  
   count(decision_binary)
 
-#Assign 0 to the references with NA (n=4)
+#Assign 0 to the references with NA (n=6)
 HZV_screening2$answer_data$decision_binary[is.na(HZV_screening2$answer_data$decision_binary)]<-0
 
 #Check
 HZV_screening2$answer_data %>%  
   count(decision_binary)
 
-writexl::write_xlsx(HZV_screening2$answer_data, "HZV_screening2.xlsx") # Export to Excel
+writexl::write_xlsx(HZV_screening2$answer_data, "validation/HZV/outputs/HZV_screening2.xlsx") # Export to Excel
 ```
 
 ### Confusion matrix
@@ -828,9 +850,9 @@ HZV_confusion2 <- table(
   Human = HZV_screening2$answer_data$human_code,
   AI = HZV_screening2$answer_data$decision_binary
 )
-print(HZV_confusion2)
-view(HZV_confusion2)
-colnames(HZV_confusion2)
+# print(HZV_confusion2)
+# view(HZV_confusion2)
+# colnames(HZV_confusion2)
 ```
 
 2.  Organizing the data in a data frame.
@@ -858,7 +880,7 @@ The evaluation of the **HZV screening 2 using** **gpt-4o-mini** (n = 11,445 refe
 
 ```{r}
 #| label: tbl-confusion-matrix2_gpt4omini
-#| tbl-cap: "Confusion matrix AIscreenR vs HZV team - tuned prompt using gpt-4o-mini"
+#| tbl-cap: "Confusion matrix AIscreenR vs HZV team - optimised prompt using gpt-4o-mini"
 #| echo: false
 
 HZV_confusion2_final %>%
@@ -867,7 +889,7 @@ HZV_confusion2_final %>%
   select(Human, Included, Excluded)%>%  # Reorder columns to put "Included" first
   gt(rowname_col = "Human") %>%
   tab_header(
-    title = "Confusion matrix AIscreenR vs HZV team - tuned prompt",
+    title = "Confusion matrix AIscreenR vs HZV team - optimised prompt",
     subtitle = "Performance analysis in study selection"
   ) %>%
   tab_stubhead(label = "Human reviewers") %>%
@@ -885,7 +907,7 @@ HZV_confusion2_final %>%
   opt_stylize(color = "blue", style = 1)
 
 # Saving the Excel file for this table.
-writexl::write_xlsx(HZV_confusion2_final, "HZV_confusion2_final.xlsx")
+writexl::write_xlsx(HZV_confusion2_final, "validation/HZV/outputs/HZV_confusion2_final.xlsx")
 ```
 
 Interpreting the results of **HZV screening 2 using gpt4-o-mini**:
@@ -900,17 +922,17 @@ Interpreting the results of **HZV screening 2 using gpt4-o-mini**:
 
 ### Key performance metrics
 
-We estimate the accuracy and the recall of the fine-tuned screening @tbl-keymetricstuned.
+We estimate the accuracy and the recall of the optimised screening @tbl-keymetricstuned.
 
 ```{r}
 #| echo: false
 #| output: false
 
-HZV_analysis2<- screen_analyzer(HZV_screening2, human_decision = human_code, key_result = TRUE)
+HZV_analysis2<- screen_analyzer(HZV_screening2, human_decision = human_code, key_result = FALSE)
 
 # Saving the analysis of the screening results
-saveRDS(HZV_analysis2, "HZV_analysis2.rds")
-writexl::write_xlsx(HZV_analysis2, "HZV_analysis2.xlsx")
+saveRDS(HZV_analysis2, "validation/HZV/outputs/HZV_analysis2.rds")
+writexl::write_xlsx(HZV_analysis2, "validation/HZV/outputs/HZV_analysis2.xlsx")
 ```
 
 | Performance metric | Value | Interpretation |
@@ -924,12 +946,12 @@ writexl::write_xlsx(HZV_analysis2, "HZV_analysis2.xlsx")
 
 ## Full screening using gpt-5-mini
 
-Running the screening using the fine-tuned prompt:
+Running the screening using the optimised prompt:
 
 ```{r}
 # HZV_screening_5gpt <- tabscreen_gpt(
 #   data = HZV_references,
-#   prompt = HZV_prompt_tuned,
+#   prompt = HZV_prompt2,
 #   studyid = ID,
 #   title = title,
 #   abstract = abstract,
@@ -945,7 +967,7 @@ Inspecting the screening results:
 #| echo: true
 #| results: false
 
-HZV_screening_5gpt <- readRDS("HZV_screening_5gpt.rds")
+HZV_screening_5gpt <- readRDS("validation/HZV/outputs/HZV_screening_5gpt.rds")
 # Preview of the screening results data.
 view(HZV_screening_5gpt$answer_data) # inspect the data
 
@@ -953,21 +975,18 @@ view(HZV_screening_5gpt$answer_data) # inspect the data
 HZV_screening_5gpt$answer_data%>%  
   count(decision_binary)
 
-#Saving the results file
-saveRDS(HZV_screening_5gpt, "HZV_screening_5gpt.rds")
-```
-
-```{r}
-#| include: false 
 #Assign 0 to the references with NA (n=2)
 HZV_screening_5gpt$answer_data$decision_binary[is.na(HZV_screening_5gpt$answer_data$decision_binary)]<-0
 
 #Check
 HZV_screening_5gpt$answer_data %>%  
   count(decision_binary)
+
+#Saving the results file
+saveRDS(HZV_screening_5gpt, "validation/HZV/outputs/HZV_screening_5gpt.rds")
 ```
 
-In **HZV screening 2 using gpt-5-mini**, `AIscreenR` excluded 9,366 references and included 2,079. Of note, *two* references were marked as 'NA' by the software. We checked these manually and reclassified them as excluded (0) as they are not deemed relevant to the study.\
+In **HZV screening using gpt-5-mini**, `AIscreenR` excluded 9,366 references and included 2,079. Of note, *two* references were marked as 'NA' by the software. We checked these manually and reclassified them as excluded (0) as they are not deemed relevant to the study.\
 
 ### Confusion matrix
 
@@ -1003,11 +1022,11 @@ View(HZV_confusion2_gpt5_final)
 
 3.  Plotting the confusion matrix
 
-The evaluation of the **HZV screening 2 using gpt-5-mini** is shown in @tbl-HZV_confusion2_gpt5.
+The evaluation of the **HZV screening using gpt-5-mini** is shown in @tbl-HZV_confusion2_gpt5.
 
 ```{r}
 #| label: tbl-HZV_confusion2_gpt5
-#| tbl-cap: "Confusion matrix AIscreenR vs HZV team - tuned prompt using gpt-5-mini"
+#| tbl-cap: "Confusion matrix AIscreenR vs HZV team - optimised prompt using gpt-5-mini"
 #| echo: false
 
 HZV_confusion2_gpt5_final %>%
@@ -1016,7 +1035,7 @@ HZV_confusion2_gpt5_final %>%
   select(Human, Included, Excluded)%>%  # Reorder columns to put "Included" first
   gt(rowname_col = "Human") %>%
   tab_header(
-    title = "Confusion matrix AIscreenR vs HZV team - tuned prompt using gpt-5-mini",
+    title = "Confusion matrix AIscreenR vs HZV team - optimised prompt using gpt-5-mini",
     subtitle = "Performance analysis in study selection"
   ) %>%
   tab_stubhead(label = "Human reviewers") %>%
@@ -1034,10 +1053,10 @@ HZV_confusion2_gpt5_final %>%
   opt_stylize(color = "blue", style = 1)
 
 # Saving the Excel file for this table.
-writexl::write_xlsx(HZV_confusion2_gpt5_final, "HZV_confusion2_gpt5_final.xlsx")
+writexl::write_xlsx(HZV_confusion2_gpt5_final, "validation/HZV/outputs/HZV_confusion2_gpt5_final.xlsx")
 ```
 
-Interpreting the results of **HZV screening 2 using gpt-5-mini**:
+Interpreting the results of **HZV screening using gpt-5-mini**:
 
 - **True Negatives (TN)=** 9,337 references (82%) were correctly excluded by both the HZV team and `AIscreenR`. In other words, `AIscreenR` safely removed 82% of the irrelevant records.
 
@@ -1047,7 +1066,7 @@ Interpreting the results of **HZV screening 2 using gpt-5-mini**:
 
 - **False Positives (FP) =** 1,972 references (17%) were included by `AIscreenR` but excluded by the HZV team. This represents the *"residual manual workload"* (i.e., the 1,972 papers the review team still needs to check manually to ensure they are truly irrelevant).
 
-### Key performance metrics (HZV screening 2 using gpt-5-mini)
+### Key performance metrics (HZV screening using gpt-5-mini)
 
 We estimate the accuracy and the recall of the fine-tuned screening using `screen_analyzer` function in `AIscreenR`
 
@@ -1056,11 +1075,11 @@ We estimate the accuracy and the recall of the fine-tuned screening using `scree
 #| results: false
 
 # Run the analyzer function to estimate the metrics
-HZV_5gpt_analysis<-screen_analyzer(HZV_screening_5gpt, human_decision = human_code)
+HZV_5gpt_analysis<-screen_analyzer(HZV_screening_5gpt, human_decision = human_code, key_result = FALSE)
 HZV_5gpt_analysis
 
 # Saving the analysis of the screening results
-saveRDS(HZV_5gpt_analysis, "HZV_5gpt_analysis.rds")
+saveRDS(HZV_5gpt_analysis, "validation/HZV/outputs/HZV_5gpt_analysis.rds")
 ```
 
 | Performance metric | Value | Interpretation |
@@ -1070,7 +1089,7 @@ saveRDS(HZV_5gpt_analysis, "HZV_5gpt_analysis.rds")
 | Specificity | 83% | `AIscreenR` correctly identifies 83% of actually excluded references. |
 | Workload savings | 82% | The HZV team would have skipped the manual screening of 9,337 references (82%) by using `AIscreenR`. |
 
-: Key performance metrics in screening of AIscreenR vs HZV team: HZV screening 2 using gpt-5-mini.
+: Key performance metrics in screening of AIscreenR vs HZV team: HZV screening using gpt-5-mini.
 
 # **Conclusion**
 
@@ -1104,7 +1123,7 @@ nrow(chunks[[1]])     # must be 200
 
 ```{r}
 # # # creating the folder (directory)
-dir.create("screening_chunks", showWarnings = FALSE)
+# dir.create("screening_chunks", showWarnings = FALSE)
 ```
 
 **Step 3. Setting up the loop**
@@ -1130,7 +1149,7 @@ This loop processes all the chunks in sequence, with *i* being the chunk number.
 #   res <- tryCatch(
 #     tabscreen_gpt(
 #       data = chunks[[i]],
-#       prompt = HZV_prompt_tuned,
+#       prompt = HZV_prompt2,
 #       studyid = ID,
 #       title = title,
 #       abstract = abstract,
@@ -1161,14 +1180,14 @@ This loop processes all the chunks in sequence, with *i* being the chunk number.
 
 # nrow(HZV_screening_5gpt_2) #checking the number of rows in the data
 # dplyr::n_distinct(HZV_screening_5gpt_2$studyid) == nrow(HZV_references) # should be TRUE
-# saveRDS(HZV_screening_5gpt_2, "HZV_screening_5gpt_2.rds") # saving the screening results
-# writexl::write_xlsx(HZV_screening_5gpt_2, "HZV_screening_5gpt_2.xlsx") 
+# saveRDS(HZV_screening_5gpt_2, "validation/HZV/outputs/HZV_screening_5gpt_2.rds") # saving the screening results
+# writexl::write_xlsx(HZV_screening_5gpt_2, "validation/HZV/outputs/HZV_screening_5gpt_2.xlsx") 
 ```
 
 **Step 7. Checking the completeness of the screening**
 
 ```{r}
-HZV_screening_5gpt_2 <- read_excel("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Research projects/FHI/Smittevern/VVP/Helvetesild_testing/HZV_screening_5gpt_2.xlsx") 
+HZV_screening_5gpt_2 <- read_excel("validation/HZV/outputs/HZV_screening_5gpt_2.xlsx") 
 
 dplyr::n_distinct(HZV_screening_5gpt_2$studyid) == nrow(HZV_references) # should be TRUE
 setdiff(HZV_references$ID, HZV_screening_5gpt_2$studyid) # to see which studies were not screened
@@ -1177,7 +1196,7 @@ setdiff(HZV_references$ID, HZV_screening_5gpt_2$studyid) # to see which studies 
 The following code allows up determine the chunks that were not screened:
 
 ```{r}
-done <- list.files("screening_chunks") # retrieves a list of the screened/completed chunks
+done <- list.files("screening_chunks") # retrieves a list of the screened/complete chunks
 all_expected <- sprintf("chunk_%03d.rds", seq_along(chunks)) # creates a list of all chunks that should exist and formats them following the three-digit zero-padded format (to ensure consistency).
 setdiff(all_expected, done) # calculates the difference
 ```
@@ -1192,18 +1211,21 @@ missing_ids_gpt5_2 <- setdiff(HZV_references$ID, HZV_screening_5gpt_2$studyid)
 HZV_missing_gpt5_2 <- dplyr::filter(HZV_references, ID %in% missing_ids_gpt5_2)
 nrow(HZV_missing_gpt5_2) # checking 
 
-res_missing_gpt5_2 <- tabscreen_gpt(
-  data = HZV_missing_gpt5_2,
-  prompt = HZV_prompt_tuned,
-  studyid = ID,
-  title = title,
-  abstract = abstract,
-  model = "gpt-5-mini",
-  reps = 1,
-  decision_description = TRUE
-)
+# res_missing_gpt5_2 <- tabscreen_gpt(
+#   data = HZV_missing_gpt5_2,
+#   prompt = HZV_prompt2,
+#   studyid = ID,
+#   title = title,
+#   abstract = abstract,
+#   model = "gpt-5-mini",
+#   reps = 1,
+#   decision_description = TRUE
+# )
 
-saveRDS(res_missing_gpt5_2, "res_missing_gpt5_2.rds")
+res_missing_gpt5_2 <- readRDS("validation/HZV/outputs/res_missing_gpt5_2.rds")
+
+class(res_missing_gpt5_2)
+saveRDS(res_missing_gpt5_2, "validation/HZV/outputs/res_missing_gpt5_2.rds")
 ```
 
 xxx
@@ -1214,14 +1236,15 @@ HZV_screening_5gpt_2 <- dplyr::bind_rows(
   res_missing_gpt5_2$answer_data
 )
 
-saveRDS(HZV_screening_5gpt_2, "HZV_screening_5gpt_2.rds")
+saveRDS(HZV_screening_5gpt_2, "validation/HZV/outputs/HZV_screening_5gpt_2.rds")
 class(HZV_screening_5gpt_2) 
 ```
 
 XXX
 
 ```{r}
-HZV_analysis_it2 <-screen_analyzer(HZV_screening_5gpt_2, human_decision = human_code)
+HZV_analysis_it2 <-screen_analyzer(HZV_screening_5gpt_2, human_decision = human_code, key_result = FALSE)
+
 view(HZV_analysis_it2)
-saveRDS(HZV_analysis_it2, "HZV_analysis_it2.rds")
+saveRDS(HZV_analysis_it2, "validation/HZV/outputs/HZV_analysis_it2.rds")
 ```
