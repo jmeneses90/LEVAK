@@ -25,6 +25,7 @@ This text describes the title/subtitle - it's just an example.
 library(rsconnect)
 library(AIscreenR)
 library(writexl)
+library(stringr)
 library(dplyr)
 library(synthesisr)
 library(tibble)
@@ -40,7 +41,7 @@ library(rsconnect)
 library(chromote)
 library(readxl)
 library(future)
-library(readr) 
+library(readr)
 
 # install the most recent pakcage update
 devtools::install_github("MikkelVembye/AIscreenR")
@@ -53,7 +54,7 @@ Text - example
 This text describes the title/subtitle - it's just an example.
 
 ```{r}
-usethis::edit_r_environ()
+# usethis::edit_r_environ()
 # Run this code to open your .Renviron file and  write CHATGPT_KEY=your_key
 # Thereafter, close and save the .Renviron file
 # Restart RStudio (ctrl + shift + F10)
@@ -65,9 +66,150 @@ get_api_key() # To check the API Key was saved successfully.
 
 This text describes the title/subtitle - it's just an example.
 
+# Pneumococcal validation
+
+## PNK - effects and safety
+
+Importing the references 
+
+```{r}
+# uploading the text file
+ref_PNK_ES_valid_1 <- read_ris_to_dataframe("validation/data/pnk/pnk_es/PNK_ef_valid.txt")
+colnames(ref_PNK_ES_valid_1)
+```
+
+Rename U4 to "human_code"
+
+```{r, include=TRUE}
+ref_PNK_ES_valid_1 <- ref_PNK_ES_valid_1 %>%
+  rename(human_code = U4)
+
+# checking that column "human_code" exists
+colnames(ref_PNK_ES_valid_1)
+
+# saving the references
+write_xlsx(ref_PNK__ES_valid_1, "validation/outputs/pnk/pnk_es/ref_PNK_ES_valid_1.xlsx")
+```
+
+Data cleaning
+
+```{r, include=TRUE}
+# keeping only variables needed for AIscreenR and relevant metadata
+ref_PNK_ES_valid_1 <- ref_PNK_ES_valid_1 %>% 
+  select(abstract, keywords, author, doi, year, title, human_code, eppi_id, record_id)
+
+# Count references missing titles
+sum(is.na(ref_PNK_ES_valid_1$title) |
+      str_trim(ref_PNK_ES_valid_1$title) == "" |
+      ref_PNK_ES_valid_1$title == "No information") # 0 ref
+
+# Count references missing abstracts
+sum(is.na(ref_PNK_ES_valid_1$abstract) |
+      str_trim(ref_PNK_ES_valid_1$abstract) == "" |
+      ref_PNK_ES_valid_1$abstract == "No information") # 8 ref
+
+# Count references missing BOTH title and abstract
+sum(
+  (is.na(ref_PNK_ES_valid_1$title) | str_trim(ref_PNK_ES_valid_1$title) == "" | ref_PNK_ES_valid_1$title == "No information") &
+  (is.na(ref_PNK_ES_valid_1$abstract) | str_trim(ref_PNK_ES_valid_1$abstract) == "" | ref_PNK_ES_valid_1$abstract == "No information")
+) # 0 ref
+```
+
+Prompt _ PNK ES
+
+The prompt is optimized to specify that studies on children under 5 are relevant only if they are at high risk due to underlying medical conditions.
+
+```{r, include=TRUE}
+prompt_PNK_ES <- "Role: You are an expert systematic review screener in vaccinology and epidemiology.
+Task: Evaluate whether a study meets the following eligibility criteria:
+Inclusion Criteria: A study must meet all of the following criteria to be included:
+•	Population: Human participants aged 5 years or older, regardless of health status or vaccination history. Studies involving children younger than 5 years are included only if the children are at high risk of severe pneumococcal disease due to underlying medical conditions (comorbidities). 
+•	Intervention: The study evaluates the effectiveness, efficacy or safety of any pneumococcal vaccine. The study must report data specifically on pneumococcal vaccines. 
+•	Comparison: Any comparator (e.g., no vaccine, placebo vaccine, another pneumococcal vaccine, or vaccine against another disease).
+•	Eligible Study Designs: 
+Experimental studies: Randomized controlled trials (parallel, cross-over, cluster, factorial, adaptive, and N-of-1 trials) and quasi-experimental studies (non-randomized trials, interrupted-time series, and difference-in-differences).
+Observational studies: Post-marketing surveillance (Phase IV trials), case-control studies (traditional, test-negative, indirect cohort/Broome method, nested case-control, self-controlled case series), case-crossover studies, and cohort studies (prospective and retrospective).
+Health-economic studies: Cost-effectiveness analysis (CEA), cost-utility analysis (CUA), cost-minimization analysis (CMA), cost-benefit analysis (CBA), and cost-consequence analysis.
+Secondary research: Systematic reviews (with or without meta-analysis), overviews of reviews, living evidence maps, and clinical guidelines explicitly based on systematic reviews.
+2.	Exclusion Criteria: Exclude the study if any of the following apply: 
+Missing Information: Insufficient details in the title/abstract to confirm eligibility; missing abstract (unless the title explicitly specifies an eligible study design); or missing title; 
+Out of scope: Studies reporting on routine childhood vaccination; studies on the indirect effects of childhood pneumococcal conjugate vaccination; studies not conducted in humans; studies that only report on immunogenicity; studies that only focus on either otitis media or nasopharyngeal carriage; ecological impact studies without individual-level data.
+Ineligible study design: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
+Constraints & Rules
+- Base your decision ONLY on the provided title, abstract, and keywords. Full-text evaluation is not possible to confirm eligibility.
+- Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
+Required Output Format
+- **Decision:** [Include / Exclude]
+- **Primary Reason:** [Briefly state the core reason for the decision]
+- **Rationale:** [Provide a concise, step-by-step breakdown referencing specific criteria]"
+
+### saving the prompt
+writeLines(prompt_PNK_ES, "validation/prompts/pnk/pnk_es/prompt_PNK_ES.txt")
+```
 
 
+Screening command
 
+```{r, include=TRUE}
+PNK_ES_screening1 <- tabscreen_gpt(
+  data = ref_PNK_ES_valid_1,
+  prompt = prompt_PNK_ES,
+  studyid = record_id,
+  title = title,
+  abstract = abstract,
+  model = "gpt-5-mini",
+  reps = 1,
+  decision_description = TRUE
+)
+
+# saving the screening results
+saveRDS(PNK_ES_screening1,"validation/outputs/pnk/pnk_es/PNK_ES_screening1.rds")
+
+# saving the screening results as an Excel file
+write_xlsx(as.data.frame(PNK_ES_screening1), "validation/outputs/pnk/pnk_es/PNK_ES_screening1.xlsx")
+```
+
+Analysing the screening results
+
+Counting inclusion and exclusion from AIscreenR
+
+```{r}
+# Count the number of included and excluded studies from AIscreenR
+PNK_ES_screening1$answer_data%>% 
+count(decision_binary)
+```
+
+AIscreenR included 61 studies, and excluded 189 studies.
+
+Detailed analysis
+
+```{r}
+screen_analyzer(PNK_ES_screening1, human_decision = human_code, key_result = TRUE)
+print(screen_analyzer(PNK_ES_screening1, human_decision = human_code, key_result = FALSE), width = Inf)
+
+
+PNK_ES_screening1_results <- screen_analyzer(
+    PNK_ES_screening1,
+    human_decision = human_code,
+    key_result = FALSE
+)
+print(PNK_ES_screening1_results) # visualising 
+
+saveRDS(PNK_ES_screening1_results, "validation/outputs/pnk/pnk_es/PNK_ES_screening1_results.rds") # saving the R object
+```
+
+Screen_analyzer yields the following results: 
+n references: 250 screened
+Model: gpt-5-mini
+Recall: 96%
+Specificity: 85%
+Precision: 44%
+Negative predictive value: 99% 
+F2: 0.38
+false negatives: 1 - called as "human_in_gpt_ex"
+false positives: 34 - called as "human_ex_gpt_in"
+true positives: 27 - called as "human_in_gpt_in"
+true negatives: 188 - called as "human_ex_gpt_ex"
 
 
 # HOLDNINGER 
@@ -79,13 +221,12 @@ Text
 Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search. 
 
 ```{r}
-library(AIscreenR)
-testref <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/data/holdninger/hold_tiltak_prim/Test LEVAK tiltak uten setting.txt")
+# library(AIscreenR)
+# testref <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/data/holdninger/hold_tiltak_prim/Test LEVAK tiltak uten setting.txt")
 
-view(testref)
-nrow(testref)
+# view(testref)
+# nrow(testref)
 
-saveRDS(testref, "C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/outputs/holdninger/hold_tiltak_prim/testref.rds")
-write_csv(testref, "outputs/holdninger/hold_tiltak_prim/testref.csv")
+# saveRDS(testref, "C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/outputs/holdninger/hold_tiltak_prim/testref.rds")
+# write_csv(testref, "outputs/holdninger/hold_tiltak_prim/testref.csv")
 ```
-
