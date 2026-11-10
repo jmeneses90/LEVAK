@@ -66,6 +66,14 @@ get_api_key() # To check the API Key was saved successfully.
 This text describes the title/subtitle - it's just an example.
 
 
+
+
+
+
+# HOLDNINGER 
+
+Text
+
 ### HOLDNINGER PRIMARSTUDIER TILTAK 
 
 Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search. 
@@ -80,3 +88,4 @@ nrow(testref)
 saveRDS(testref, "C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/outputs/holdninger/hold_tiltak_prim/testref.rds")
 write_csv(testref, "outputs/holdninger/hold_tiltak_prim/testref.csv")
 ```
+
