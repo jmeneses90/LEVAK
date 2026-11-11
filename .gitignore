@@ -13,7 +13,7 @@
 # 3. Temporary files in Quarto
 /.quarto/
 *_cache/
-*.yml
+**/*_quarto.yml
 
 # 4. Temporary files in Office
 ~$*
