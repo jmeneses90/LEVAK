@@ -33,9 +33,7 @@ Before formal deployment for each vaccine in the VVP, our team develops specific
 <img src="images\Figure_1_workflow.png" alt="LEVAK Framework" width="650"/>
 
 
-Text
-Text
-
+This text is being. For further details, contact: Jose Meneses; jose.meneses@fhi.no 
 
 ---
 ### References
