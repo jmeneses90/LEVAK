@@ -4,14 +4,12 @@ Welcome to LEVAK! LEVAK is a living evidence map on vaccine research developed b
 The studies presented in LEVAK are selected using an [AIscreenR-assisted workflow](https://mikkelvembye.github.io/AIScreenR/).
 
 ## Table of contents
-- [Abstract](#Abstract)
-- [Objectives and scope](#Objectives)
+- [Abstract](#abstract)
+- [Objectives and scope](#objectives-and-scope)
 - [Registration](#registration)
 - [Methods](#methods)
-- [LEVAK-workflow](##levak-work)
+ - [LEVAK-workflow](#levak-workflow)
 - [References](#references)
-
-
 
 
 
