@@ -3,6 +3,18 @@
 Welcome to LEVAK! LEVAK is a living evidence map on vaccine research developed by the Department of Infectious Disease Control and Vaccines at the Norwegian Institute of Public Health. This site outlines the methods underpinning LEVAK and provides insights into the validation framework upon which it is built.
 The studies presented in LEVAK are selected using an [AIscreenR-assisted workflow](https://mikkelvembye.github.io/AIScreenR/).
 
+## Table of contents
+- [Abstract](#Abstract)
+- [Objectives and scope](#Objectives)
+- [Registration](#registration)
+- [Methods](#methods)
+- [LEVAK-workflow](##levak-work)
+- [References](#references)
+
+
+
+
+
 ## Abstract
 
 **Background**: Living evidence approaches are useful in navigating the steadily growing volume of vaccine research. Recent advances in artificial intelligence offer new opportunities to semi-automate workflows while preserving methodological rigor and transparency. This protocol outlines the development of a living evidence map for the Adult Immunisation in Norway, referred to as LEVAK. This will be a continually updated, interactive evidence map for the three vaccines in the national program: COVID-19, influenza, and pneumococcal vaccines alongside research on public attitudes toward vaccination and interventions to increase coverage.
