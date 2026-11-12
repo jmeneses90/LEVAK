@@ -8,7 +8,7 @@ The studies presented in LEVAK are selected using an [AIscreenR-assisted workflo
 - [Objectives and scope](#objectives-and-scope)
 - [Registration](#registration)
 - [Methods](#methods)
- - [LEVAK-workflow](#levak-workflow)
+  - [LEVAK-workflow](#levak-workflow)
 - [References](#references)
 
 
