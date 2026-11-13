@@ -45,11 +45,9 @@ Jose F. Meneses-Echavez
     effect of
     interventions](#attitudes-toward-vaccination--vaccine-coverage-primary-studies-on-effect-of-interventions)
 
-Text Text Text
 
-# Table of contents
-
-[Objective](#objective)
+# Background
+Insert background
 
 ## Objective
 
@@ -65,7 +63,7 @@ benchmark.
 Centralizing all packages, libraries and functions used for the
 evaluation and reporting into a dedicated chunk.
 
-``` r
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Load packages and libraries
 library(rsconnect)
 library(AIscreenR)
@@ -92,22 +90,6 @@ library(readr)
 devtools::install_github("MikkelVembye/AIscreenR")
 ```
 
-    parallelly (1.48.0 -> 1.50.0) [CRAN]
-    future     (1.70.0 -> 1.82.0) [CRAN]
-
-    package 'parallelly' successfully unpacked and MD5 sums checked
-
-    The downloaded binary packages are in
-        C:\Users\JOFM\AppData\Local\Temp\Rtmpi02QoT\downloaded_packages
-    ── R CMD build ─────────────────────────────────────────────────────────────────
-
-    * checking for file 'C:\Users\JOFM\AppData\Local\Temp\Rtmpi02QoT\remotes78e8728f7d01\MikkelVembye-AIscreenR-a9f766f/DESCRIPTION' ... OK
-    * preparing 'AIscreenR':
-    * checking DESCRIPTION meta-information ... OK
-    * checking for LF line-endings in source and make files and shell scripts
-    * checking for empty or unneeded directories
-    * building 'AIscreenR_0.5.1.tar.gz'
-
 ## API key
 
 `AIscreenR` uses an API key to connect to a Large Language Model (LLM),
@@ -116,7 +98,7 @@ API key (which is private and confidential), you can save it using the
 following code:
 
 ``` r
-# get_api_key() 
+# get_api_key()
 ```
 
 # Influenza vaccines
