@@ -4,10 +4,8 @@ author: "Jose F. Meneses-Echavez"
 date: today
 format: 
   gfm:
-    output-file: "README.md"
     toc: true
     toc-depth: 3
-  pdf: default
 execute:
   echo: true
   warning: false
