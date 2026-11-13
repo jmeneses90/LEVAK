@@ -2,11 +2,10 @@
 Jose F. Meneses-Echavez
 2026-11-13
 
-- [Table of contents](#table-of-contents)
-  - [Objective](#objective)
-  - [Uploading the libraries and
-    packages](#uploading-the-libraries-and-packages)
-  - [API key](#api-key)
+- [Objective](#objective)
+- [Uploading the libraries and
+  packages](#uploading-the-libraries-and-packages)
+- [API key](#api-key)
 - [Influenza vaccines](#influenza-vaccines)
   - [Vaccine effectiveness and
     safety](#vaccine-effectiveness-and-safety)
@@ -45,10 +44,6 @@ Jose F. Meneses-Echavez
     effect of
     interventions](#attitudes-toward-vaccination--vaccine-coverage-primary-studies-on-effect-of-interventions)
 
-
-# Background
-Insert background
-
 ## Objective
 
 The main aim is to prospectively evaluate the performance of `AIscreenR`
@@ -58,12 +53,14 @@ research [LEVAK](https://github.com/jmeneses90/LEVAK), using the
 screening decision of content experts as the gold-standard comparative
 benchmark.
 
+ESTOY EDITANDO
+
 ## Uploading the libraries and packages
 
 Centralizing all packages, libraries and functions used for the
 evaluation and reporting into a dedicated chunk.
 
-```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+``` r
 # Load packages and libraries
 library(rsconnect)
 library(AIscreenR)
@@ -87,7 +84,7 @@ library(future)
 library(readr)
 
 # install the most recent pakcage update
-devtools::install_github("MikkelVembye/AIscreenR")
+devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
 ```
 
 ## API key
@@ -98,7 +95,7 @@ API key (which is private and confidential), you can save it using the
 following code:
 
 ``` r
-# get_api_key()
+# get_api_key() 
 ```
 
 # Influenza vaccines
