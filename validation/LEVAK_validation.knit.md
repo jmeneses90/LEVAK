@@ -4,7 +4,6 @@ author: "Jose F. Meneses-Echavez"
 date: today
 format: 
   gfm:
-    output-file: "README.md"
     toc: true
     toc-depth: 3
   pdf: default
@@ -13,13 +12,6 @@ execute:
   warning: false
   message: false
 ---
-
-Text
-Text
-Text
-
-# Table of contents
-[Objective](#objective)
 
 
 ## Objective
@@ -83,7 +75,7 @@ package 'parallelly' successfully unpacked and MD5 sums checked
 ```
 
 The downloaded binary packages are in
-	C:\Users\JOFM\AppData\Local\Temp\RtmpGcVuxm\downloaded_packages
+	C:\Users\JOFM\AppData\Local\Temp\RtmpucKdwN\downloaded_packages
 ── R CMD build ─────────────────────────────────────────────────────────────────
 ```
 
@@ -93,7 +85,7 @@ The downloaded binary packages are in
 ::: {.cell-output .cell-output-stdout}
 
 ```
-* checking for file 'C:\Users\JOFM\AppData\Local\Temp\RtmpGcVuxm\remotes6768433f4f4d\MikkelVembye-AIscreenR-a9f766f/DESCRIPTION' ... OK
+* checking for file 'C:\Users\JOFM\AppData\Local\Temp\RtmpucKdwN\remotes68486de03d62\MikkelVembye-AIscreenR-a9f766f/DESCRIPTION' ... OK
 * preparing 'AIscreenR':
 * checking DESCRIPTION meta-information ... OK
 * checking for LF line-endings in source and make files and shell scripts
