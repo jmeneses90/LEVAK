@@ -67,29 +67,25 @@ devtools::install_github("MikkelVembye/AIscreenR")
 # get_api_key() 
 ```
 
-# First evaluation
+# Influenza vaccines
 
-The literature searches yielded a total of 5451 unique references:
-
-2023 (1733 references)
-2024 (1553 references)
-2025 (1731 references)
-2026 (434 references)
-
-References from 2026 are used in this valdiation. The validation methods are presented separately for the two main categories in LEVAK: 
+The validation methods are presented separately for the two main categories in LEVAK: 
   a) vaccine effectiveness and safety, and 
   b) burden of disease and risk groups.
 
-Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
-
 ##  Vaccine effectiveness and safety
 
-Insert text
+### First evaluation
+The literature searches yielded a total of 5451 unique references:
 
-##  Burden of disease and risk groups
+- 2023 (1733 references)
+- 2024 (1553 references)
+- 2025 (1731 references)
+- 2026 (434 references)
 
-Insert text
+References from 2026 are used in this valdiation. 
 
+Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
 
 To develop a robust prompt, we first evaluated `AIscreenR`'s performance by screening a random sample of 200 references, from the 434 references identified in 2026.
 
@@ -113,8 +109,7 @@ Importing the dataset and preparing it for screening. The dataset is in RIS form
 # saveRDS(references_inf_valid_1, "data/references_inf_valid_1.rds")
 ```
 
-
-## Prompting
+## Prompt
 
 Following a first draft of the prompt prepared by Jose Meneses and approved by the content experts, we ran the screening process in `AIscreenR` as follows:
 
@@ -209,20 +204,17 @@ We will analyze the false positives to identify any common characteristics or pa
 
 The LEVAK team used the insights from this false negative analysis to refine the prompt and put it to the test in a second round of screening.
 
-# Second evaluation
+### Second evaluation
 
 The content experts (human_coders) independently read the remaining 234 references from 2026. We used the same methodological approach as described for the first evaluation above.
-
-## Importing the dataset
-
 The remaining 234 references from 2026 are selected:
+
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
 ```
 
 Renaming U4 to 'human_code':
-
 ```{r}
 # references_inf_valid_2 <- references_inf_valid_2 %>% 
 #   rename(human_code = U4)
