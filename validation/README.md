@@ -2,6 +2,7 @@
 Jose F. Meneses-Echavez
 2026-11-13
 
+- [Background](#background)
 - [Objective](#objective)
 - [Uploading the libraries and
   packages](#uploading-the-libraries-and-packages)
@@ -44,6 +45,10 @@ Jose F. Meneses-Echavez
     effect of
     interventions](#attitudes-toward-vaccination--vaccine-coverage-primary-studies-on-effect-of-interventions)
 
+## Background
+
+Insert a short background sketching the report
+
 ## Objective
 
 The main aim is to prospectively evaluate the performance of `AIscreenR`
@@ -52,8 +57,6 @@ categories and folders presented in the living evidence map for vaccine
 research [LEVAK](https://github.com/jmeneses90/LEVAK), using the
 screening decision of content experts as the gold-standard comparative
 benchmark.
-
-ESTOY EDITANDO
 
 ## Uploading the libraries and packages
 
