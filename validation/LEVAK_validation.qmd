@@ -1,13 +1,13 @@
 ---
-title: "LEVAK validation"
+title: "LEVAK validation framework"
 author: "Jose F. Meneses-Echavez"
 date: today
 format: 
-  html:
+  gfm:
+    output-file: "README.md"
     toc: true
     toc-depth: 3
-    theme: flatly
-    embed-resources: true
+  pdf: default
 execute:
   echo: true
   warning: false
@@ -16,10 +16,10 @@ execute:
 
 Text
 Text
+Text
 
 # Table of contents
 [Objective](#objective)
-
 
 
 
@@ -82,10 +82,26 @@ This text describes the title/subtitle - it's just an example.
 
 The literature searches yielded a total of 5451 unique references:
 
+<<<<<<< HEAD
 - 2023 (1733 references)
 - 2024 (1553 references)
 - 2025 (1731 references)
 - 2026 (434 references)
+=======
+The validation methods are presented separately for the two main categories in LEVAK: 
+a) vaccine effectiveness and safety, and 
+b) burden of disease and risk groups.
+
+Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
+
+##  Vaccine effectiveness and safety
+
+Insert text
+
+##  Burden of disease and risk groups
+
+Insert text
+>>>>>>> feature/influensa_validation
 
 To develop a robust prompt, we first evaluated `AIscreenR`'s performance by screening a random sample of 200 references, from the 434 references identified in 2026.
 
@@ -370,9 +386,23 @@ b
 <<<<<<<<<<<<<<<<<<<<
 <<<<<<<<<<<<<<<<<<<<
 
-# Pneumococcal validation
 
-## PNK - effects and safety
+
+# COVID-19 vaccines
+
+##  Vaccine effectiveness and safety
+
+Insert text
+
+##  Burden of disease and risk groups
+
+Insert text
+
+
+
+# Pneumococcal vaccines
+
+##  Vaccine effectiveness and safety
 
 Importing the references 
 
@@ -483,7 +513,7 @@ PNK_ES_screening1$answer_data%>%
 count(decision_binary)
 ```
 
-AIscreenR included 61 studies, and excluded 189 studies.
+`AIscreenR` included 61 studies, and excluded 189 studies.
 
 Detailed analysis
 
@@ -516,11 +546,28 @@ true positives: 27 - called as "human_in_gpt_in"
 true negatives: 188 - called as "human_ex_gpt_ex"
 
 
-# Public attitudes toward vaccination and coverage
+##  Burden of disease and risk groups
 
-Text
+Insert text
 
-### HOLDNINGER PRIMARSTUDIER TILTAK 
+
+
+
+# Attitudes toward vaccination & vaccine coverage
+
+As reported in our [LEVAK protocol](https://osf.io/pmut5/overview), this evidence pillar consist of two categories: 
+  a) Attitudes toward vaccination
+  b) Interventions to increase vaccine coverage/uptake
+
+For details on the evidence mapped out within the categories, please visit our [LEVAK protocol](https://osf.io/pmut5/overview).
+
+Search stratgies are built up differenlty for primary studies than for secondary research. The search terms specific to the interventions prioritzed in LEVAK 
+
+### Evidence synthesis on both attitudes toward vaccination & interventions to increase vaccine coverage/uptake
+
+This section of the validation evaluates the performance of `AIscreenR` in identifying the prioritized types of evidence synthesis reporting on both estimates of public attitudes toward vaccination and effect studies evaluating interventions to increase vaccine coverage and impact public attitudes toward vaccination. In other words, this validation captures secondary research on cross-sectional studies describing estimates of public attitudes toward vaccination and vaccine coverage, and then, in the effects section, it covers the interventions that impact them.
+
+### Attitudes toward vaccination & vaccine coverage: primary studies on effect of interventions
 
 Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search. 
 
