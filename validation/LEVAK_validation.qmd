@@ -64,16 +64,8 @@ devtools::install_github("MikkelVembye/AIscreenR")
 `AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code: 
 
 ```{r}
-# usethis::edit_r_environ()
-# Run this code to open your .Renviron file and  write CHATGPT_KEY=your_key
-# Thereafter, close and save the .Renviron file
-# Restart RStudio (ctrl + shift + F10)
-# From now on, AIscreenR will automatically use get_api_key()
-# to retrieve your API key from your R environment.
-
-# get_api_key() # To check the API Key was saved successfully.
+# get_api_key() 
 ```
-
 
 # First evaluation
 
@@ -84,7 +76,7 @@ The literature searches yielded a total of 5451 unique references:
 2025 (1731 references)
 2026 (434 references)
 
-The validation methods are presented separately for the two main categories in LEVAK: 
+References from 2026 are used in this valdiation. The validation methods are presented separately for the two main categories in LEVAK: 
   a) vaccine effectiveness and safety, and 
   b) burden of disease and risk groups.
 
