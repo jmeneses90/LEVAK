@@ -1,0 +1,535 @@
+---
+title: "LEVAK validation framework"
+author: "Jose F. Meneses-Echavez"
+date: today
+format: 
+  gfm:
+    output-file: "README.md"
+    toc: true
+    toc-depth: 3
+  pdf: default
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Objective
+The main aim is to prospectively evaluate the performance of `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research [LEVAK](https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
+
+## Uploading the libraries and packages
+
+Centralizing all packages, libraries and functions used for the evaluation and reporting into a dedicated chunk.
+
+```{r}
+# Load packages and libraries
+library(rsconnect)
+library(AIscreenR)
+library(writexl)
+library(stringr)
+library(dplyr)
+library(synthesisr)
+library(tibble)
+library(revtools)
+library(flextable)
+library(tinytex)
+library(tidyr)
+library(ggplot2)
+library(gt)
+library(webshot2)
+library(packrat)
+library(rsconnect)
+library(chromote)
+library(readxl)
+library(future)
+library(readr)
+
+# install the most recent pakcage update
+devtools::install_github("MikkelVembye/AIscreenR")
+```
+
+## API key
+`AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code: 
+
+```{r}
+# get_api_key() 
+```
+
+# Influenza vaccines
+
+The validation methods are presented separately for the two main categories in LEVAK: 
+  a) vaccine effectiveness and safety, and 
+  b) burden of disease and risk groups.
+
+##  Vaccine effectiveness and safety
+
+### First evaluation
+The literature searches yielded a total of 5451 unique references:
+
+- 2023 (1733 references)
+- 2024 (1553 references)
+- 2025 (1731 references)
+- 2026 (434 references)
+
+References from 2026 are used in this valdiation.
+
+Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
+
+To develop a robust prompt, we first evaluated `AIscreenR`'s performance by screening a random sample of 200 references, from the 434 references identified in 2026.
+
+During the second week of April 2026, two content experts (Birgitte Klüwer and Anna Hayman Robertson) screened these references for eligibility based on predefined selection criteria (available in the LEVAK protocol).
+
+## Importing the dataset
+Importing the dataset and preparing it for screening. The dataset is in RIS format. We will read the RIS file into a dataframe and then rename some columns for better clarity.
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+# references_inf_valid_1 <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/Influensa_LEVAK/Effekt_&_sikkerhet_Inf/Influensa_AIScreenR_validering/data/Referanser_First200/Influensa_AIScreenR_1st200/Influensa_effekt_validering_1st200.txt")
+
+# # Rename U4 to "human_code"
+# references_inf_valid_1 <- references_inf_valid_1 %>% # nolint
+#   rename(human_code = U4)
+#   Rename record_id to "ID"
+# references_inf_valid_1 <- references_inf_valid_1 %>%
+#   rename(ID = record_id)
+#   colnames(references_inf_valid_1) # checking the column names to ensure they are correctly renamed.
+
+# # saving the references as a variable in the workspace
+# saveRDS(references_inf_valid_1, "data/references_inf_valid_1.rds")
+```
+
+## Prompt
+
+Following a first draft of the prompt prepared by Jose Meneses and approved by the content experts, we ran the screening process in `AIscreenR` as follows:
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# prompt_influensa_valid_1 <-"Role: You are an expert systematic review screener expert in vaccinology and epidemiology. Task: Evaluate whether a study meets the following eligibility criteria: 1. Inclusion Criteria: A study must meet all the following criteria to be included:
+# Population: Human participants of any age, health status, or vaccination history. Intervention: The study evaluates the effects, efficacy, or safety of any influenza vaccine. The study must report data specifically on influenza vaccines.
+# Comparison: No restrictions (any comparator or no comparator is acceptable). Eligible Study Designs: Experimental studies: Randomized controlled trials (RCTs), non-randomized studies, quasi-experimental.
+# Observational: Prospective/retrospective cohort, population-based, registry-based, case-control, and nested case-control. Secondary/Other: Systematic reviews, meta-analyses, and post-marketing safety evaluations. Include guidelines only if explicitly based on systematic reviews. 
+# 2. Exclusion Criteria. Exclude the study if any of the following apply: Not conducted in humans; does not report results specific to influenza vaccines; cross-sectional studies; surveys or purely self-reported data without outcome validation;  qualitative studies; narrative (non-systematic) reviews; case reports, case series, editorials, commentaries, letters without original or synthesized data.
+# Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied. Provide a rationale for your assessment"
+
+# writeLines(prompt_influensa_valid_1, "prompts/prompt_influensa_valid_1.txt")
+```
+
+## Running the screening process
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+#influensa_valid_1_screening <-  tabscreen_gpt(
+  #data = references_inf_valid_1,
+  #prompt = prompt_influensa_valid_1,
+  #studyid = ID,
+  #title = title,
+  #abstract = abstract,
+  #model = "gpt-5-mini",
+  #reps = 1,
+  #decision_description = TRUE
+#)
+```
+
+Saving the screening results
+
+```{r}
+# ## saving the screening file (RDS)
+# saveRDS(influensa_valid_1_screening, "influensa_valid_1_screening.rds")
+
+# # # loading the results file
+# influensa_valid1_screening <- readRDS("outputs/influensa_valid_1_screening.rds")
+
+# # # convert the rds file to Excel for result analysis
+# write.xlsx(influensa_valid1_screening,"outputs/influensa_valid1_screening_results.xlsx")
+```
+
+## Analysis
+
+### Performance metrics: analyzing the screening results
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# #  Analysis - screen_analyzer 
+# influensa_valid1_analysis <- screen_analyzer(influensa_valid1_screening, human_decision = human_code, key_result = FALSE ) 
+
+# glimpse(influensa_valid1_analysis)
+# saveRDS(influensa_valid1_analysis, "outputs/influensa_valid1_analysis.rds") 
+# influensa_valid1_analysis_excel <- write.xlsx(influensa_valid1_analysis, "outputs/influensa_valid1_analysis_excel.xlsx")
+```
+
+### Key results (validation 1)
+
+- `AIscreenR` included 81 studies and excluded 119 studies.
+
+- `AIscreenR` had zero false negatives, which means that it excluded no relevant study. The **recall (sensitivity)** is **1**, which means that it correctly identified all of the studies that were included by human coders.
+
+- `AIscreenR` included 43 studies (21%) that human coders had excluded (**false positives**).
+
+- The **specificity** of `AIscreenR` is **73%**, which means that it correctly excluded 73% of the studies that were excluded by human coders. `AIscreenR` included 43 studies that human coders had excluded.
+
+- The NPV of 1 suggested that `AIscreenR` correctly excluded all the irrelevant studies (those excluded by human coders).
+
+- The overall agreement between human coders and `AIscreenR` was 78%, indicating a disagreement of 21%.
+
+- The **precision**, the ability to include only references that should be included, was 47%.
+
+#### False positives analysis
+
+The LEVAK team is interested in understanding the reasons behind the false positives. These are the studies that were included by `AIscreenR` but excluded by human coders.
+
+```{r, include= TRUE, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+## creating the screening results file in Excel 
+# influensa_valid1_screening_results_excel <- read_excel("outputs/influensa_valid1_screening_results.xlsx")
+# view(influensa_valid1_screening_results_excel)
+# colnames(influensa_valid1_screening_results_excel)
+
+# ## puling out the false positives (FP) from the screening results 
+# FP_infvalid1 <- influensa_valid1_screening_results_excel%>% 
+#   filter(answer_data.human_code == 0,
+#   answer_data.decision_binary == 1)
+
+# view(FP_infvalid1) # checking the file
+# write.xlsx(FP_infvalid1,"outputs/FP_infvalid1.xlsx") # saving the file 
+```
+
+We will analyze the false positives to identify any common characteristics or patterns that may have led to their inclusion by `AIscreenR`. This analysis will help us understand the limitations of `AIscreenR` and provide insights for improving its performance in future screenings.
+
+The LEVAK team used the insights from this false negative analysis to refine the prompt and put it to the test in a second round of screening.
+
+### Second evaluation
+
+The content experts (human_coders) independently read the remaining 234 references from 2026. We used the same methodological approach as described for the first evaluation above.
+The remaining 234 references from 2026 are selected:
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+# references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
+```
+
+Renaming U4 to 'human_code':
+```{r}
+# references_inf_valid_2 <- references_inf_valid_2 %>% 
+#   rename(human_code = U4)
+
+#   # Rename record_id to "ID"
+# references_inf_valid_2 <- references_inf_valid_2 %>%
+#   rename(ID = record_id)
+# colnames(references_inf_valid_2) # check the column names to ensure they are correctly renamed.
+```
+
+## Running the screening process
+
+To preserve validity, we used the same prompt:
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# influensa_valid_2_screening <-  tabscreen_gpt(
+#   data = references_inf_valid_2,
+#   prompt = prompt_influensa_valid_1,
+#   studyid = ID,
+#   title = title,
+#   abstract = abstract,
+#   model = "gpt-5-mini",
+#   reps = 1,
+#   decision_description = TRUE
+# )
+
+# saveRDS(influensa_valid_2_screening, "influensa_valid_2_screening.rds")
+# influensa_valid_2_screening <- readRDS("influensa_valid_2_screening.rds")
+
+# # convert the rds file to Excel for result analysis (counting the number of included and excluded studies based on the AI screening results)
+# write.xlsx(influensa_valid_2_screening,"influensa_valid_2_screening_results.xlsx")
+```
+
+```{r, include= TRUE, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+# ## Reading the screening results from the second evaluation:
+# influensa_valid2_screening <- readRDS("outputs\\influensa_valid_2_screening.rds")
+
+# # saving the screening results in an Excel file
+# influensa_valid2_results_excel <- write.xlsx(influensa_valid2_screening,"outputs/influensa_valid2_results_excel.xlsx")
+```
+
+## Analysis
+
+### Performance metrics: analyzing the screening results
+
+```{r}
+#  Analysis - screen_analyzer 
+# influensa_valid2_analysis <- screen_analyzer(influensa_valid2_screening, human_decision = human_code, key_result = FALSE ) 
+# glimpse(influensa_valid2_analysis)
+# saveRDS(influensa_valid2_analysis, "outputs/influensa_valid2_analysis.rds") 
+# influensa_valid2_analysis_excel <- write.xlsx(influensa_valid2_analysis, "outputs/influensa_valid2_analysis_excel.xlsx")
+```
+
+```{r}
+## creating the screening results file in Excel 
+# influensa_valid2_screening_results_excel <- read_excel("outputs/influensa_valid2_results_excel.xlsx")
+# colnames(influensa_valid2_screening_results_excel)
+
+
+# ## puling out the false positives (FP) from the screening results 
+# FP_infvalid2 <- influensa_valid2_screening_results_excel%>% 
+#   filter(answer_data.human_code == 0,
+#   answer_data.decision_binary == 1)
+
+# view(FP_infvalid2) # checking the file
+# write.xlsx(FP_infvalid2,"outputs/FP_infvalid2.xlsx") # saving the file {r}
+```
+
+REVISAR LOS 4 human_in_gpt_ex
+
+REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS
+
+**ANALYSIS PREVIO**
+
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# # Step 1. Count the number of included and excluded studies based on the AI screening results
+# influensa_valid_2_screening$answer_data%>%  
+#   count(decision_binary)
+
+# # Step 2. Analysis - screen_analyzer
+# influensa_valid2_analysis <- screen_analyzer(influensa_valid_2_screening, human_decision = human_code) 
+# view(influensa_valid2_analysis)
+# # saving the analysis results
+# saveRDS(influensa_valid2_analysis, "influensa_valid1_analysis.rds")
+```
+
+`AIscreenR` included 77 studies and excluded 157 studies based on the screening process.
+
+### Confusion matrix
+
+```{r, include= TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+# Creating the confusion matrix
+# influensa_valid_2_screening_results <- read.xlsx("influensa_valid_2_screening_results.xlsx")
+# confmatrix_infvalid2 <- influensa_valid_2_screening_results%>%
+#   mutate(result_type = case_when(
+#     human_code == 1 & decision_binary == 1 ~ "True Positive (TP)",
+#     human_code == 0 & decision_binary == 0 ~ "True Negative (TN)",
+#     human_code == 0 & decision_binary == 1 ~ "False Positive (FP)",
+#     human_code == 1 & decision_binary == 0 ~ "False Negative (FN)"
+#   )) 
+# saveRDS(confmatrix_infvalid2, "confmatrix_infvalid2.rds")
+# write.xlsx(confmatrix_infvalid2,"confmatrix_infvalid2.xlsx")
+
+# # Extracting the false positives
+# FP_infvalid2 <- confmatrix_infvalid2%>% 
+#   filter(result_type == "False Positive (FP)")
+# print(paste("Number of false positives:", nrow(FP_infvalid2)))
+
+# # True positives
+# TP_infvalid2 <- confmatrix_infvalid2%>% 
+#   filter(result_type == "True Positive (TP)")
+# print(paste("Number of true positives:", nrow(TP_infvalid2)))
+
+# # True negatives
+# TN_infvalid2 <- confmatrix_infvalid2%>% 
+#   filter(result_type == "True Negative (TN)")
+# print(paste("Number of true negatives:", nrow(TN_infvalid2)))
+
+# # False negatives
+# FN_infvalid2 <- confmatrix_infvalid2%>% 
+#   filter(result_type == "False Negative (FN)")
+# print(paste("Number of false negatives:", nrow(FN_infvalid2)))
+```
+
+### Key results, second validation
+
+- `AIscreenR` had four false negatives. Besides, its **recall (sensitivity) is 88%**, which means that it correctly identified almost all of the studies that were included by human reviewers (nine out of ten references).
+
+- The **specificity of** `AIscreenR` is **76%**, which means that it correctly excluded 76% of the studies that were excluded by human reviewers.
+
+### Third evaluation
+
+Immunogenicity is added into the prompt. We test the results comparing against the previous two evaluations above.
+
+```{r}
+# prompt_influensa_valid_2 <- "Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. Task: Evaluate the study meets the eligibility criteria below, based strictly on its title and abstract.
+# Eligibility Criteria
+# 1. Inclusion Criteria (Must meet ALL of the following):
+# - Population: Human participants of any age, health status, or vaccination history.
+# - Intervention: Explicitly evaluates the effects, efficacy, safety or immunogenicity of influenza vaccines. The study MUST report specific outcome data for influenza vaccines. Include immunogenicity studies only if they explicitly address the antibody response.
+# - Comparator: Any comparator (e.g., no vaccine, placebo vaccine, another influenza vaccine, or vaccine against another disease).
+# - Eligible Study Designs:
+# b
+```
+
+# COVID-19 vaccines
+
+##  Vaccine effectiveness and safety
+
+Insert text
+
+##  Burden of disease and risk groups
+
+Insert text
+
+# Pneumococcal vaccines
+
+##  Vaccine effectiveness and safety
+
+Importing the references
+
+```{r}
+# uploading the text file
+# ref_PNK_ES_valid_1 <- read_ris_to_dataframe("validation/data/pnk/pnk_es/PNK_ef_valid.txt")
+# colnames(ref_PNK_ES_valid_1)
+```
+
+Rename U4 to "human_code"
+
+```{r, include=TRUE}
+# ref_PNK_ES_valid_1 <- ref_PNK_ES_valid_1 %>%
+#   rename(human_code = U4)
+
+# # checking that column "human_code" exists
+# colnames(ref_PNK_ES_valid_1)
+
+# # saving the references
+# write_xlsx(ref_PNK__ES_valid_1, "validation/outputs/pnk/pnk_es/ref_PNK_ES_valid_1.xlsx")
+```
+
+Data cleaning
+
+```{r, include=TRUE}
+# # keeping only variables needed for AIscreenR and relevant metadata
+# ref_PNK_ES_valid_1 <- ref_PNK_ES_valid_1 %>% 
+#   select(abstract, keywords, author, doi, year, title, human_code, eppi_id, record_id)
+
+# # Count references missing titles
+# sum(is.na(ref_PNK_ES_valid_1$title) |
+#       str_trim(ref_PNK_ES_valid_1$title) == "" |
+#       ref_PNK_ES_valid_1$title == "No information") # 0 ref
+
+# # Count references missing abstracts
+# sum(is.na(ref_PNK_ES_valid_1$abstract) |
+#       str_trim(ref_PNK_ES_valid_1$abstract) == "" |
+#       ref_PNK_ES_valid_1$abstract == "No information") # 8 ref
+
+# # Count references missing BOTH title and abstract
+# sum(
+#   (is.na(ref_PNK_ES_valid_1$title) | str_trim(ref_PNK_ES_valid_1$title) == "" | ref_PNK_ES_valid_1$title == "No information") &
+#   (is.na(ref_PNK_ES_valid_1$abstract) | str_trim(ref_PNK_ES_valid_1$abstract) == "" | ref_PNK_ES_valid_1$abstract == "No information")
+# ) # 0 ref
+```
+
+Prompt _ PNK ES
+
+The prompt is optimized to specify that studies on children under 5 are relevant only if they are at high risk due to underlying medical conditions.
+
+```{r, include=TRUE}
+# prompt_PNK_ES <- "Role: You are an expert systematic review screener in vaccinology and epidemiology.
+# Task: Evaluate whether a study meets the following eligibility criteria:
+# Inclusion Criteria: A study must meet all of the following criteria to be included:
+# •	Population: Human participants aged 5 years or older, regardless of health status or vaccination history. Studies involving children younger than 5 years are included only if the children are at high risk of severe pneumococcal disease due to underlying medical conditions (comorbidities). 
+# •	Intervention: The study evaluates the effectiveness, efficacy or safety of any pneumococcal vaccine. The study must report data specifically on pneumococcal vaccines. 
+# •	Comparison: Any comparator (e.g., no vaccine, placebo vaccine, another pneumococcal vaccine, or vaccine against another disease).
+# •	Eligible Study Designs: 
+# Experimental studies: Randomized controlled trials (parallel, cross-over, cluster, factorial, adaptive, and N-of-1 trials) and quasi-experimental studies (non-randomized trials, interrupted-time series, and difference-in-differences).
+# Observational studies: Post-marketing surveillance (Phase IV trials), case-control studies (traditional, test-negative, indirect cohort/Broome method, nested case-control, self-controlled case series), case-crossover studies, and cohort studies (prospective and retrospective).
+# Health-economic studies: Cost-effectiveness analysis (CEA), cost-utility analysis (CUA), cost-minimization analysis (CMA), cost-benefit analysis (CBA), and cost-consequence analysis.
+# Secondary research: Systematic reviews (with or without meta-analysis), overviews of reviews, living evidence maps, and clinical guidelines explicitly based on systematic reviews.
+# 2.	Exclusion Criteria: Exclude the study if any of the following apply: 
+# Missing Information: Insufficient details in the title/abstract to confirm eligibility; missing abstract (unless the title explicitly specifies an eligible study design); or missing title; 
+# Out of scope: Studies reporting on routine childhood vaccination; studies on the indirect effects of childhood pneumococcal conjugate vaccination; studies not conducted in humans; studies that only report on immunogenicity; studies that only focus on either otitis media or nasopharyngeal carriage; ecological impact studies without individual-level data.
+# Ineligible study design: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
+# Constraints & Rules
+# - Base your decision ONLY on the provided title, abstract, and keywords. Full-text evaluation is not possible to confirm eligibility.
+# - Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
+# Required Output Format
+# - **Decision:** [Include / Exclude]
+# - **Primary Reason:** [Briefly state the core reason for the decision]
+# - **Rationale:** [Provide a concise, step-by-step breakdown referencing specific criteria]"
+
+# ### saving the prompt
+# writeLines(prompt_PNK_ES, "validation/prompts/pnk/pnk_es/prompt_PNK_ES.txt")
+```
+
+Screening command
+
+```{r, include=TRUE}
+# PNK_ES_screening1 <- tabscreen_gpt(
+#   data = ref_PNK_ES_valid_1,
+#   prompt = prompt_PNK_ES,
+#   studyid = record_id,
+#   title = title,
+#   abstract = abstract,
+#   model = "gpt-5-mini",
+#   reps = 1,
+#   decision_description = TRUE
+# )
+
+# # saving the screening results
+# saveRDS(PNK_ES_screening1,"validation/outputs/pnk/pnk_es/PNK_ES_screening1.rds")
+
+# # saving the screening results as an Excel file
+# write_xlsx(as.data.frame(PNK_ES_screening1), "validation/outputs/pnk/pnk_es/PNK_ES_screening1.xlsx")
+```
+
+Analysing the screening results
+
+Counting inclusion and exclusion from AIscreenR
+
+```{r}
+# # Count the number of included and excluded studies from AIscreenR
+# PNK_ES_screening1$answer_data%>% 
+# count(decision_binary)
+```
+
+`AIscreenR` included 61 studies, and excluded 189 studies.
+
+Detailed analysis
+
+```{r}
+# screen_analyzer(PNK_ES_screening1, human_decision = human_code, key_result = TRUE)
+# print(screen_analyzer(PNK_ES_screening1, human_decision = human_code, key_result = FALSE), width = Inf)
+
+
+# PNK_ES_screening1_results <- screen_analyzer(
+#     PNK_ES_screening1,
+#     human_decision = human_code,
+#     key_result = FALSE
+# )
+# print(PNK_ES_screening1_results) # visualising 
+
+# saveRDS(PNK_ES_screening1_results, "validation/outputs/pnk/pnk_es/PNK_ES_screening1_results.rds") # saving the R object
+```
+
+Screen_analyzer yields the following results: 
+n references: 250 screened
+Model: gpt-5-mini
+Recall: 96%
+Specificity: 85%
+Precision: 44%
+Negative predictive value: 99% 
+F2: 0.38
+false negatives: 1 - called as "human_in_gpt_ex"
+false positives: 34 - called as "human_ex_gpt_in"
+true positives: 27 - called as "human_in_gpt_in"
+true negatives: 188 - called as "human_ex_gpt_ex"
+
+##  Burden of disease and risk groups
+
+Insert text
+
+# Attitudes toward vaccination & vaccine coverage
+
+As reported in our [LEVAK protocol](https://osf.io/pmut5/overview), this evidence pillar consist of two categories:
+  a) Attitudes toward vaccination
+  b) Interventions to increase vaccine coverage/uptake
+
+For details on the evidence mapped out within the categories, please visit our [LEVAK protocol](https://osf.io/pmut5/overview).
+
+Search stratgies are built up differenlty for primary studies than for secondary research. The search terms specific to the interventions prioritzed in LEVAK.
+
+### Evidence synthesis on both attitudes toward vaccination & interventions to increase vaccine coverage/uptake
+
+This section of the validation evaluates the performance of `AIscreenR` in identifying the prioritized types of evidence synthesis reporting on both estimates of public attitudes toward vaccination and effect studies evaluating interventions to increase vaccine coverage and impact public attitudes toward vaccination. In other words, this validation captures secondary research on cross-sectional studies describing estimates of public attitudes toward vaccination and vaccine coverage, and then, in the effects section, it covers the interventions that impact them.
+
+### Attitudes toward vaccination & vaccine coverage: primary studies on effect of interventions
+
+Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search. 
+
+```{r}
+# library(AIscreenR)
+# testref <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/data/holdninger/hold_tiltak_prim/Test LEVAK tiltak uten setting.txt")
+
+# view(testref)
+# nrow(testref)
+
+# saveRDS(testref, "C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/LEVAK/validation/outputs/holdninger/hold_tiltak_prim/testref.rds")
+# write_csv(testref, "outputs/holdninger/hold_tiltak_prim/testref.csv")
+```
