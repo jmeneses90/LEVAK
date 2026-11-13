@@ -60,7 +60,6 @@ library(readr)
 devtools::install_github("MikkelVembye/AIscreenR")
 ```
 
-
 ## API key
 `AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code: 
 
@@ -75,21 +74,19 @@ devtools::install_github("MikkelVembye/AIscreenR")
 # get_api_key() # To check the API Key was saved successfully.
 ```
 
-This text describes the title/subtitle - it's just an example.
 
 # First evaluation
 
 The literature searches yielded a total of 5451 unique references:
 
-<<<<<<< HEAD
-- 2023 (1733 references)
-- 2024 (1553 references)
-- 2025 (1731 references)
-- 2026 (434 references)
-=======
+2023 (1733 references)
+2024 (1553 references)
+2025 (1731 references)
+2026 (434 references)
+
 The validation methods are presented separately for the two main categories in LEVAK: 
-a) vaccine effectiveness and safety, and 
-b) burden of disease and risk groups.
+  a) vaccine effectiveness and safety, and 
+  b) burden of disease and risk groups.
 
 Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
 
@@ -104,8 +101,7 @@ Insert text
 
 To develop a robust prompt, we first evaluated `AIscreenR`'s performance by screening a random sample of 200 references, from the 434 references identified in 2026.
 
-During the second week of April 2026, two content experts (Birgitte KlC<wer and Anna Hayman Robertson) screened these references for eligibility based on predefined selection criteria (available in the LEVAK protocol).
-
+During the second week of April 2026, two content experts (Birgitte Klüwer and Anna Hayman Robertson) screened these references for eligibility based on predefined selection criteria (available in the LEVAK protocol).
 
 ## Importing the dataset
 Importing the dataset and preparing it for screening. The dataset is in RIS format. We will read the RIS file into a dataframe and then rename some columns for better clarity.
@@ -381,11 +377,6 @@ Immunogenicity is added into the prompt. We test the results comparing against t
 ```
 
 
-<<<<<<<<<<<<<<<<<<<<
-<<<<<<<<<<<<<<<<<<<<
-<<<<<<<<<<<<<<<<<<<<
-
-
 
 # COVID-19 vaccines
 
@@ -396,7 +387,6 @@ Insert text
 ##  Burden of disease and risk groups
 
 Insert text
-
 
 
 # Pneumococcal vaccines
@@ -479,7 +469,6 @@ The prompt is optimized to specify that studies on children under 5 are relevant
 # ### saving the prompt
 # writeLines(prompt_PNK_ES, "validation/prompts/pnk/pnk_es/prompt_PNK_ES.txt")
 ```
-
 
 Screening command
 
