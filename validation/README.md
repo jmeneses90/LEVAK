@@ -7,20 +7,18 @@ Jose F. Meneses-Echavez
   - [Uploading the libraries and
     packages](#uploading-the-libraries-and-packages)
   - [API key](#api-key)
-- [First evaluation](#first-evaluation)
+- [Influenza vaccines](#influenza-vaccines)
   - [Vaccine effectiveness and
     safety](#vaccine-effectiveness-and-safety)
-  - [Burden of disease and risk
-    groups](#burden-of-disease-and-risk-groups)
+    - [First evaluation](#first-evaluation)
   - [Importing the dataset](#importing-the-dataset)
-  - [Prompting](#prompting)
+  - [Prompt](#prompt)
   - [Running the screening process](#running-the-screening-process)
   - [Analysis](#analysis)
     - [Performance metrics: analyzing the screening
       results](#performance-metrics-analyzing-the-screening-results)
     - [Key results (validation 1)](#key-results-validation-1)
-- [Second evaluation](#second-evaluation)
-  - [Importing the dataset](#importing-the-dataset-1)
+    - [Second evaluation](#second-evaluation)
   - [Running the screening process](#running-the-screening-process-1)
   - [Analysis](#analysis-1)
     - [Performance metrics: analyzing the screening
@@ -32,12 +30,12 @@ Jose F. Meneses-Echavez
   - [Vaccine effectiveness and
     safety](#vaccine-effectiveness-and-safety-1)
   - [Burden of disease and risk
-    groups](#burden-of-disease-and-risk-groups-1)
+    groups](#burden-of-disease-and-risk-groups)
 - [Pneumococcal vaccines](#pneumococcal-vaccines)
   - [Vaccine effectiveness and
     safety](#vaccine-effectiveness-and-safety-2)
   - [Burden of disease and risk
-    groups](#burden-of-disease-and-risk-groups-2)
+    groups](#burden-of-disease-and-risk-groups-1)
 - [Attitudes toward vaccination & vaccine
   coverage](#attitudes-toward-vaccination--vaccine-coverage)
   - [Evidence synthesis on both attitudes toward vaccination &
@@ -53,18 +51,14 @@ Text Text Text
 
 [Objective](#objective)
 
-\<\<\<\<\<\<\<\<\<
-
 ## Objective
 
-The main aim is to prospectively evaluate the performance of <AIscreenR>
-/ `AIscreenR` in screening references at the title and abstract level in
-the different categories and folders presented in the living evidence
-map for vaccine research (LEVAK)(https://github.com/jmeneses90/LEVAK),
-using the screening decision of content experts as the gold-standard
-comparative benchmark.
-
-\<\<\<\<\<\<\<\<\<
+The main aim is to prospectively evaluate the performance of `AIscreenR`
+in screening references at the title and abstract level in the different
+categories and folders presented in the living evidence map for vaccine
+research [LEVAK](https://github.com/jmeneses90/LEVAK), using the
+screening decision of content experts as the gold-standard comparative
+benchmark.
 
 ## Uploading the libraries and packages
 
@@ -104,10 +98,10 @@ devtools::install_github("MikkelVembye/AIscreenR")
     package 'parallelly' successfully unpacked and MD5 sums checked
 
     The downloaded binary packages are in
-        C:\Users\JOFM\AppData\Local\Temp\Rtmp4ewEto\downloaded_packages
+        C:\Users\JOFM\AppData\Local\Temp\Rtmpi02QoT\downloaded_packages
     ── R CMD build ─────────────────────────────────────────────────────────────────
 
-    * checking for file 'C:\Users\JOFM\AppData\Local\Temp\Rtmp4ewEto\remotes4dc84234c60\MikkelVembye-AIscreenR-a9f766f/DESCRIPTION' ... OK
+    * checking for file 'C:\Users\JOFM\AppData\Local\Temp\Rtmpi02QoT\remotes78e8728f7d01\MikkelVembye-AIscreenR-a9f766f/DESCRIPTION' ... OK
     * preparing 'AIscreenR':
     * checking DESCRIPTION meta-information ... OK
     * checking for LF line-endings in source and make files and shell scripts
@@ -122,47 +116,37 @@ API key (which is private and confidential), you can save it using the
 following code:
 
 ``` r
-# usethis::edit_r_environ()
-# Run this code to open your .Renviron file and  write CHATGPT_KEY=your_key
-# Thereafter, close and save the .Renviron file
-# Restart RStudio (ctrl + shift + F10)
-# From now on, AIscreenR will automatically use get_api_key()
-# to retrieve your API key from your R environment.
-
-get_api_key() # To check the API Key was saved successfully.
+# get_api_key() 
 ```
 
-    [1] "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"
+# Influenza vaccines
 
-This text describes the title/subtitle - it’s just an example.
-
-# First evaluation
-
-The literature searches yielded a total of 5451 unique references:
-
-\<\<\<\<\<\<\< HEAD - 2023 (1733 references) - 2024 (1553 references) -
-2025 (1731 references) - 2026 (434 references) ======= The validation
-methods are presented separately for the two main categories in LEVAK:
-a) vaccine effectiveness and safety, and b) burden of disease and risk
-groups.
-
-Further details on the LEVAK methodological framework are available at:
-\[https://osf.io/pmut5/overview\].
+The validation methods are presented separately for the two main
+categories in LEVAK: a) vaccine effectiveness and safety, and b) burden
+of disease and risk groups.
 
 ## Vaccine effectiveness and safety
 
-Insert text
+### First evaluation
 
-## Burden of disease and risk groups
+The literature searches yielded a total of 5451 unique references:
 
-Insert text \>\>\>\>\>\>\> feature/influensa_validation
+- 2023 (1733 references)
+- 2024 (1553 references)
+- 2025 (1731 references)
+- 2026 (434 references)
+
+References from 2026 are used in this valdiation.
+
+Further details on the LEVAK methodological framework are available at:
+\[https://osf.io/pmut5/overview\].
 
 To develop a robust prompt, we first evaluated `AIscreenR`’s performance
 by screening a random sample of 200 references, from the 434 references
 identified in 2026.
 
 During the second week of April 2026, two content experts (Birgitte
-KlC\<wer and Anna Hayman Robertson) screened these references for
+Klüwer and Anna Hayman Robertson) screened these references for
 eligibility based on predefined selection criteria (available in the
 LEVAK protocol).
 
@@ -187,7 +171,7 @@ some columns for better clarity.
 # saveRDS(references_inf_valid_1, "data/references_inf_valid_1.rds")
 ```
 
-## Prompting
+## Prompt
 
 Following a first draft of the prompt prepared by Jose Meneses and
 approved by the content experts, we ran the screening process in
@@ -286,15 +270,12 @@ screenings.
 The LEVAK team used the insights from this false negative analysis to
 refine the prompt and put it to the test in a second round of screening.
 
-# Second evaluation
+### Second evaluation
 
 The content experts (human_coders) independently read the remaining 234
 references from 2026. We used the same methodological approach as
-described for the first evaluation above.
-
-## Importing the dataset
-
-The remaining 234 references from 2026 are selected:
+described for the first evaluation above. The remaining 234 references
+from 2026 are selected:
 
 ``` r
 # references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
@@ -364,9 +345,9 @@ To preserve validity, we used the same prompt:
 
 REVISAR LOS 4 human_in_gpt_ex
 
-REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS!!!!
+REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS
 
-ANALYSIS PREVIO\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
+**ANALYSIS PREVIO**
 
 ``` r
 # # Step 1. Count the number of included and excluded studies based on the AI screening results
@@ -411,10 +392,6 @@ against the previous two evaluations above.
 # - Eligible Study Designs:
 # b
 ```
-
-\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<
-\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<
-\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<\<
 
 # COVID-19 vaccines
 
@@ -581,7 +558,7 @@ visit our [LEVAK protocol](https://osf.io/pmut5/overview).
 
 Search stratgies are built up differenlty for primary studies than for
 secondary research. The search terms specific to the interventions
-prioritzed in LEVAK
+prioritzed in LEVAK.
 
 ### Evidence synthesis on both attitudes toward vaccination & interventions to increase vaccine coverage/uptake
 
