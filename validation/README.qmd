@@ -18,6 +18,8 @@ execute:
 ## Objective
 The main aim is to prospectively evaluate the performance of `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research [LEVAK](https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
 
+ESTOY EDITANDO
+
 ## Uploading the libraries and packages
 
 Centralizing all packages, libraries and functions used for the evaluation and reporting into a dedicated chunk.
