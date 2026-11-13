@@ -25,7 +25,7 @@ Text
 <<<<<<<<<
 
 ## Objective
-The main aim is to prospectively evaluate the performance of <AIscreenR>  / `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research (LEVAK)(https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
+The main aim is to prospectively evaluate the performance of `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research [LEVAK](https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
 
 <<<<<<<<<
 
@@ -287,7 +287,7 @@ REVISAR LOS 4 human_in_gpt_ex
 
 REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS!!!!
 
-ANALYSIS PREVIO\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
+**ANALYSIS PREVIO**
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 # # Step 1. Count the number of included and excluded studies based on the AI screening results
