@@ -14,11 +14,25 @@ execute:
   message: false
 ---
 
-Text text example
+Text
+Text
+
+# Table of contents
+[Objective](#objective)
+
+
+
+
+<<<<<<<<<
+
+## Objective
+The main aim is to prospectively evaluate the performance of <AIscreenR>  / `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research (LEVAK)(https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
+
+<<<<<<<<<
 
 ## Uploading the libraries and packages
 
-This text describes the title/subtitle - it's just an example.
+Centralizing all packages, libraries and functions used for the evaluation and reporting into a dedicated chunk.
 
 ```{r}
 # Load packages and libraries
@@ -47,11 +61,9 @@ library(readr)
 devtools::install_github("MikkelVembye/AIscreenR")
 ```
 
-Text - example
 
-## setting the API key
-
-This text describes the title/subtitle - it's just an example.
+## API key
+`AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code: 
 
 ```{r}
 # usethis::edit_r_environ()
@@ -65,6 +77,13 @@ get_api_key() # To check the API Key was saved successfully.
 ```
 
 This text describes the title/subtitle - it's just an example.
+
+# Influenza
+
+This study validates the performance of `AIscreenR` in screening studies on influenza vaccines, within study selection phase for the living evidence map for vaccine research (LEVAK). The sample consists of the references published in 2026, retrieved through our systematic searches. We defined a prompt in collaboration with content experts (known as 'sykdomsansvarlige', disease experts in Norwegian). This prompt was then deployed in `AIscreenR` to screen the search results. `AIscreenR`'s performance was evaluated against human coders using metrics such as recall, specificity, and workload savings.
+
+Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\]
+
 
 # Pneumococcal validation
 
@@ -212,7 +231,7 @@ true positives: 27 - called as "human_in_gpt_in"
 true negatives: 188 - called as "human_ex_gpt_ex"
 
 
-# HOLDNINGER 
+# Public attitudes toward vaccination and coverage
 
 Text
 
