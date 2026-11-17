@@ -132,24 +132,12 @@ Following a first draft of the prompt prepared by Jose Meneses and approved by t
 # saveRDS(inf_valid1_screening, "validation/outputs/influensa/inf_es/inf_valid1_screening.rds")
 
 # convert the rds file to Excel for result analysis
-write.xlsx(inf_valid1_screening,"validation/outputs/influensa/inf_es/inf_valid1_screening.xlsx")
+# write.xlsx(inf_valid1_screening,"validation/outputs/influensa/inf_es/inf_valid1_screening.xlsx")
 ```
-
-
 
 
 
 ***********
-
-
-Saving the screening results
-
-```{r}
-
-
-
-
-```
 
 ## Analysis
 
@@ -347,32 +335,29 @@ REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS
 Immunogenicity is added into the prompt. We test the results comparing against the previous two evaluations above.
 
 ```{r}
-prompt_influensa_valid_2 <- "Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. Task: Evaluate the study meets the eligibility criteria below, based strictly on its title and abstract.
-Eligibility Criteria
-1. Inclusion Criteria (Must meet ALL of the following):
-- Population: Human participants of any age, health status, or vaccination history.
-- Intervention: Explicitly evaluates the effects, efficacy, safety or immunogenicity of influenza vaccines. The study MUST report specific outcome data for influenza vaccines. Include immunogenicity studies only if they explicitly address the antibody response.
-- Comparator: Any comparator (e.g., no vaccine, placebo vaccine, another influenza vaccine, or vaccine against another disease).
-- Eligible Study Designs:
-•	Experimental studies: Randomized controlled trials and quasi-experimental studies (non-randomized trials).
-•	Observational studies: Post-marketing surveillance (Phase IV trials), case-control studies (traditional and test-negative), nested case-control, self-controlled case series, case-crossover studies, and cohort studies (prospective and retrospective).
-•	Health-economic studies: Cost-effectiveness analysis (CEA), cost-utility analysis (CUA), cost-minimization analysis (CMA), cost-benefit analysis (CBA), and cost-consequence analysis.
-•	Secondary research: systematic reviews (with or without meta-analysis), overviews of reviews, living evidence maps, and clinical guidelines explicitly based on systematic reviews.
-2. Exclusion Criteria (Exclude if ANY of the following apply):
-- Missing Information: Insufficient details in the title/abstract to confirm eligibility; missing abstract (unless the title explicitly specifies an eligible study design); or missing title.
-- Out of Scope: Non-human studies; studies not evaluating/reporting specific effects, efficacy, or safety data for influenza vaccines.
-- Ineligible Study Designs: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
-Constraints & Rules
-- Base your decision ONLY on the provided title and abstract. Full-text evaluation is not possible to confirm eligibility.
-- Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
-Required Output Format
-- Decision: [Include / Exclude]
-- Primary Reason: [Briefly state the core reason for the decision]
-- Rationale: [Provide a concise, step-by-step breakdown referencing specific criteria]"
+# prompt_influensa_valid_2 <- "Role: You are an expert systematic review screener specializing in vaccinology and epidemiology. Task: Evaluate the study meets the eligibility criteria below, based strictly on its title and abstract.
+# Eligibility Criteria
+# 1. Inclusion Criteria (Must meet ALL of the following):
+# - Population: Human participants of any age, health status, or vaccination history.
+# - Intervention: Explicitly evaluates the effects, efficacy, safety or immunogenicity of influenza vaccines. The study MUST report specific outcome data for influenza vaccines. Include immunogenicity studies only if they explicitly address the antibody response.
+# - Comparator: Any comparator (e.g., no vaccine, placebo vaccine, another influenza vaccine, or vaccine against another disease).
+# - Eligible Study Designs:
+# •	Experimental studies: Randomized controlled trials and quasi-experimental studies (non-randomized trials).
+# •	Observational studies: Post-marketing surveillance (Phase IV trials), case-control studies (traditional and test-negative), nested case-control, self-controlled case series, case-crossover studies, and cohort studies (prospective and retrospective).
+# •	Health-economic studies: Cost-effectiveness analysis (CEA), cost-utility analysis (CUA), cost-minimization analysis (CMA), cost-benefit analysis (CBA), and cost-consequence analysis.
+# •	Secondary research: systematic reviews (with or without meta-analysis), overviews of reviews, living evidence maps, and clinical guidelines explicitly based on systematic reviews.
+# 2. Exclusion Criteria (Exclude if ANY of the following apply):
+# - Missing Information: Insufficient details in the title/abstract to confirm eligibility; missing abstract (unless the title explicitly specifies an eligible study design); or missing title.
+# - Out of Scope: Non-human studies; studies not evaluating/reporting specific effects, efficacy, or safety data for influenza vaccines.
+# - Ineligible Study Designs: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
+# Constraints & Rules
+# - Base your decision ONLY on the provided title and abstract. Full-text evaluation is not possible to confirm eligibility.
+# - Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
+# Required Output Format
+# - Decision: [Include / Exclude]
+# - Primary Reason: [Briefly state the core reason for the decision]
+# - Rationale: [Provide a concise, step-by-step breakdown referencing specific criteria]"
 ```
-
-
-
 
 
 ```{r}
@@ -386,72 +371,73 @@ Required Output Format
 #   reps = 1,
 #   decision_description = TRUE
 # )
-influensa_valid_3_screening <- readRDS("influensa_valid_3_screening.rds")
-saveRDS(influensa_valid_3_screening, "influensa_valid_3_screening.rds")
 
-# convert the rds file to Excel for result analysis
-write.xlsx(influensa_valid_3_screening,"influensa_valid_3_screening.xlsx")
+# influensa_valid_3_screening <- readRDS("influensa_valid_3_screening.rds")
+# saveRDS(influensa_valid_3_screening, "influensa_valid_3_screening.rds")
+
+# # convert the rds file to Excel for result analysis
+# write.xlsx(influensa_valid_3_screening,"influensa_valid_3_screening.xlsx")
 ```
 
 ```{r}
-influensa_valid_3_screening_results <- readRDS("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/Influensa_LEVAK/Influensa_AIScreenR_validering/influensa_valid_3_screening.rds")
+# influensa_valid_3_screening_results <- readRDS("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/Influensa_LEVAK/Influensa_AIScreenR_validering/influensa_valid_3_screening.rds")
 ```
 
 ```{r}
-screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE)
+# screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE)
 ```
 
 recall 0.95 and specificity 0.80
 
 ```{r}
-print(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE), width = Inf)
+# print(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE), width = Inf)
 ```
 
 ```{r}
-glimpse(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE))
+# glimpse(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE))
 ```
 
-Table\*\*\*
+[insert table - Jose]
 
 ```{r}
 # creating the object
-influenza_valid3_results <- screen_analyzer(
-    influensa_valid_3_screening_results, 
-    human_decision = human_code, 
-    key_result = FALSE
-)
+# influenza_valid3_results <- screen_analyzer(
+#     influensa_valid_3_screening_results, 
+#     human_decision = human_code, 
+#     key_result = FALSE
+# )
 ```
 
 Text
 
 ```{r}
-false_negatives_valid3 <- influenza_valid3_results %>%
-   filter(human_in_gpt_ex)
+# false_negatives_valid3 <- influenza_valid3_results %>%
+#    filter(human_in_gpt_ex)
 ```
 
 Text
 
 ```{r}
 # Creating the object (table)
-influenza_valid3_resultstable <- influenza_valid3_results %>%
-   select(n_screened, n_missing, human_in_gpt_ex, human_ex_gpt_in, human_ex_gpt_ex, human_in_gpt_in, accuracy, p_agreement, precision, recall, npv, specificity, bacc, F2, mcc, irr) %>%
-  pivot_longer(
-    cols = everything(), 
-    names_to = "Metric",      
-    values_to = "Value"        
-  )
+# influenza_valid3_resultstable <- influenza_valid3_results %>%
+#    select(n_screened, n_missing, human_in_gpt_ex, human_ex_gpt_in, human_ex_gpt_ex, human_in_gpt_in, accuracy, p_agreement, precision, recall, npv, specificity, bacc, F2, mcc, irr) %>%
+#   pivot_longer(
+#     cols = everything(), 
+#     names_to = "Metric",      
+#     values_to = "Value"        
+#   )
 
 # Inserting the table in the report
-influenza_valid3_resultstable %>%
-  gt() %>%
-  tab_header(
-      title = "Influenza validation 3 - screening performance metrics",
-      subtitle = "Evaluation of AIscreenR against content experts"
-  ) %>%
-  fmt_number(
-      columns = Value,
-      decimals = 2 # adjusting two decimals
-  )
+# influenza_valid3_resultstable %>%
+#   gt() %>%
+#   tab_header(
+#       title = "Influenza validation 3 - screening performance metrics",
+#       subtitle = "Evaluation of AIscreenR against content experts"
+#   ) %>%
+#   fmt_number(
+#       columns = Value,
+#       decimals = 2 # adjusting two decimals
+#   )
 ```
 
 ### Performance Metrics Interpretation
@@ -481,8 +467,6 @@ influenza_valid3_resultstable %>%
 - Los dos falsos negativos son 1) una scoping review [https://dx.doi.org/10.1016/j.vaccine.2026.128341](#0)
 
 y 2) un Research Letter que no tenía abstract (<https://dx.doi.org/10.1001/jama.2026.2173>)
-
-
 
 
 # COVID-19 vaccines

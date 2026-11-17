@@ -1,6 +1,6 @@
 # LEVAK validation framework
 Jose F. Meneses-Echavez
-2026-11-13
+2026-11-17
 
 - [Background](#background)
 - [Objective](#objective)
@@ -13,19 +13,21 @@ Jose F. Meneses-Echavez
     - [First evaluation](#first-evaluation)
   - [Importing the dataset](#importing-the-dataset)
   - [Prompt](#prompt)
-  - [Running the screening process](#running-the-screening-process)
+  - [Running the screening](#running-the-screening)
   - [Analysis](#analysis)
     - [Performance metrics: analyzing the screening
       results](#performance-metrics-analyzing-the-screening-results)
     - [Key results (validation 1)](#key-results-validation-1)
     - [Second evaluation](#second-evaluation)
-  - [Running the screening process](#running-the-screening-process-1)
+  - [Running the screening process](#running-the-screening-process)
   - [Analysis](#analysis-1)
     - [Performance metrics: analyzing the screening
       results](#performance-metrics-analyzing-the-screening-results-1)
     - [Confusion matrix](#confusion-matrix)
     - [Key results, second validation](#key-results-second-validation)
     - [Third evaluation](#third-evaluation)
+    - [Performance Metrics
+      Interpretation](#performance-metrics-interpretation)
 - [COVID-19 vaccines](#covid-19-vaccines)
   - [Vaccine effectiveness and
     safety](#vaccine-effectiveness-and-safety-1)
@@ -85,6 +87,7 @@ library(chromote)
 library(readxl)
 library(future)
 library(readr)
+library(openxlsx)
 
 # install the most recent pakcage update
 devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
@@ -98,7 +101,7 @@ API key (which is private and confidential), you can save it using the
 following code:
 
 ``` r
-# get_api_key() 
+get_api_key()
 ```
 
 # Influenza vaccines
@@ -125,12 +128,10 @@ Further details on the LEVAK methodological framework are available at:
 
 To develop a robust prompt, we first evaluated `AIscreenR`’s performance
 by screening a random sample of 200 references, from the 434 references
-identified in 2026.
-
-During the second week of April 2026, two content experts (Birgitte
-Klüwer and Anna Hayman Robertson) screened these references for
-eligibility based on predefined selection criteria (available in the
-LEVAK protocol).
+identified in 2026. During the second week of April 2026, two content
+experts (Birgitte Klüwer and Anna Hayman Robertson) screened these
+references for eligibility based on predefined selection criteria
+(available in the LEVAK protocol).
 
 ## Importing the dataset
 
@@ -139,18 +140,20 @@ RIS format. We will read the RIS file into a dataframe and then rename
 some columns for better clarity.
 
 ``` r
-# references_inf_valid_1 <- read_ris_to_dataframe("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/Influensa_LEVAK/Effekt_&_sikkerhet_Inf/Influensa_AIScreenR_validering/data/Referanser_First200/Influensa_AIScreenR_1st200/Influensa_effekt_validering_1st200.txt")
+# ref_inf_valid_1 <- read_ris_to_dataframe("validation/data/influensa/inf_es/Influensa_effekt_validering_1st200.txt")
 
-# # Rename U4 to "human_code"
-# references_inf_valid_1 <- references_inf_valid_1 %>% # nolint
+# Rename U4 to "human_code"
+# ref_inf_valid_1 <- ref_inf_valid_1 %>%
 #   rename(human_code = U4)
-#   Rename record_id to "ID"
-# references_inf_valid_1 <- references_inf_valid_1 %>%
-#   rename(ID = record_id)
-#   colnames(references_inf_valid_1) # checking the column names to ensure they are correctly renamed.
 
-# # saving the references as a variable in the workspace
-# saveRDS(references_inf_valid_1, "data/references_inf_valid_1.rds")
+#Rename record_id to "ID"
+# ref_inf_valid_1 <- ref_inf_valid_1 %>%
+#   rename(ID = record_id)
+
+# colnames(ref_inf_valid_1) #checking the columns
+
+# saving the references in the workspace
+# saveRDS(ref_inf_valid_1, "validation/data/influensa/inf_es/ref_inf_valid_1.rds")
 ```
 
 ## Prompt
@@ -160,20 +163,20 @@ approved by the content experts, we ran the screening process in
 `AIscreenR` as follows:
 
 ``` r
-# prompt_influensa_valid_1 <-"Role: You are an expert systematic review screener expert in vaccinology and epidemiology. Task: Evaluate whether a study meets the following eligibility criteria: 1. Inclusion Criteria: A study must meet all the following criteria to be included:
+# prompt_inf_valid1 <-"Role: You are an expert systematic review screener expert in vaccinology and epidemiology. Task: Evaluate whether a study meets the following eligibility criteria: 1. Inclusion Criteria: A study must meet all the following criteria to be included:
 # Population: Human participants of any age, health status, or vaccination history. Intervention: The study evaluates the effects, efficacy, or safety of any influenza vaccine. The study must report data specifically on influenza vaccines.
 # Comparison: No restrictions (any comparator or no comparator is acceptable). Eligible Study Designs: Experimental studies: Randomized controlled trials (RCTs), non-randomized studies, quasi-experimental.
 # Observational: Prospective/retrospective cohort, population-based, registry-based, case-control, and nested case-control. Secondary/Other: Systematic reviews, meta-analyses, and post-marketing safety evaluations. Include guidelines only if explicitly based on systematic reviews. 
 # 2. Exclusion Criteria. Exclude the study if any of the following apply: Not conducted in humans; does not report results specific to influenza vaccines; cross-sectional studies; surveys or purely self-reported data without outcome validation;  qualitative studies; narrative (non-systematic) reviews; case reports, case series, editorials, commentaries, letters without original or synthesized data.
 # Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied. Provide a rationale for your assessment"
 
-# writeLines(prompt_influensa_valid_1, "prompts/prompt_influensa_valid_1.txt")
+# writeLines(prompt_inf_valid1, "validation/prompts/influensa/inf_es/prompt_inf_valid1.txt")
 ```
 
-## Running the screening process
+## Running the screening
 
 ``` r
-#influensa_valid_1_screening <-  tabscreen_gpt(
+#inf_valid1_screening <-  tabscreen_gpt(
   #data = references_inf_valid_1,
   #prompt = prompt_influensa_valid_1,
   #studyid = ID,
@@ -183,20 +186,15 @@ approved by the content experts, we ran the screening process in
   #reps = 1,
   #decision_description = TRUE
 #)
+
+# saving the screening results
+# saveRDS(inf_valid1_screening, "validation/outputs/influensa/inf_es/inf_valid1_screening.rds")
+
+# convert the rds file to Excel for result analysis
+# write.xlsx(inf_valid1_screening,"validation/outputs/influensa/inf_es/inf_valid1_screening.xlsx")
 ```
 
-Saving the screening results
-
-``` r
-# ## saving the screening file (RDS)
-# saveRDS(influensa_valid_1_screening, "influensa_valid_1_screening.rds")
-
-# # # loading the results file
-# influensa_valid1_screening <- readRDS("outputs/influensa_valid_1_screening.rds")
-
-# # # convert the rds file to Excel for result analysis
-# write.xlsx(influensa_valid1_screening,"outputs/influensa_valid1_screening_results.xlsx")
-```
+------------------------------------------------------------------------
 
 ## Analysis
 
@@ -256,8 +254,9 @@ refine the prompt and put it to the test in a second round of screening.
 
 The content experts (human_coders) independently read the remaining 234
 references from 2026. We used the same methodological approach as
-described for the first evaluation above. The remaining 234 references
-from 2026 are selected:
+described for the first evaluation above.
+
+We first selec the remaining 234 references from 2026:
 
 ``` r
 # references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
@@ -372,8 +371,144 @@ against the previous two evaluations above.
 # - Intervention: Explicitly evaluates the effects, efficacy, safety or immunogenicity of influenza vaccines. The study MUST report specific outcome data for influenza vaccines. Include immunogenicity studies only if they explicitly address the antibody response.
 # - Comparator: Any comparator (e.g., no vaccine, placebo vaccine, another influenza vaccine, or vaccine against another disease).
 # - Eligible Study Designs:
-# b
+# • Experimental studies: Randomized controlled trials and quasi-experimental studies (non-randomized trials).
+# • Observational studies: Post-marketing surveillance (Phase IV trials), case-control studies (traditional and test-negative), nested case-control, self-controlled case series, case-crossover studies, and cohort studies (prospective and retrospective).
+# • Health-economic studies: Cost-effectiveness analysis (CEA), cost-utility analysis (CUA), cost-minimization analysis (CMA), cost-benefit analysis (CBA), and cost-consequence analysis.
+# • Secondary research: systematic reviews (with or without meta-analysis), overviews of reviews, living evidence maps, and clinical guidelines explicitly based on systematic reviews.
+# 2. Exclusion Criteria (Exclude if ANY of the following apply):
+# - Missing Information: Insufficient details in the title/abstract to confirm eligibility; missing abstract (unless the title explicitly specifies an eligible study design); or missing title.
+# - Out of Scope: Non-human studies; studies not evaluating/reporting specific effects, efficacy, or safety data for influenza vaccines.
+# - Ineligible Study Designs: Cross-sectional studies; surveys or self-reported data lacking outcome validation; qualitative studies; narrative (non-systematic) reviews; scoping reviews; mapping reviews; case reports; case series; editorials; conference proceedings; commentaries; replies to editor; and letters without original data.
+# Constraints & Rules
+# - Base your decision ONLY on the provided title and abstract. Full-text evaluation is not possible to confirm eligibility.
+# - Include a study ONLY if every inclusion criterion is met and no exclusion criterion applies.
+# Required Output Format
+# - Decision: [Include / Exclude]
+# - Primary Reason: [Briefly state the core reason for the decision]
+# - Rationale: [Provide a concise, step-by-step breakdown referencing specific criteria]"
 ```
+
+``` r
+# influensa_valid_3_screening <-  tabscreen_gpt(
+#   data = references_inf_valid_1,
+#   prompt = prompt_influensa_valid_2, 
+#   studyid = ID,
+#   title = title,
+#   abstract = abstract,
+#   model = "gpt-5-mini",
+#   reps = 1,
+#   decision_description = TRUE
+# )
+
+# influensa_valid_3_screening <- readRDS("influensa_valid_3_screening.rds")
+# saveRDS(influensa_valid_3_screening, "influensa_valid_3_screening.rds")
+
+# # convert the rds file to Excel for result analysis
+# write.xlsx(influensa_valid_3_screening,"influensa_valid_3_screening.xlsx")
+```
+
+``` r
+# influensa_valid_3_screening_results <- readRDS("C:/Users/JOFM/OneDrive - Folkehelseinstituttet/Vaksinasjon av voksne og risikogrupper - LEVAK/Influensa_LEVAK/Influensa_AIScreenR_validering/influensa_valid_3_screening.rds")
+```
+
+``` r
+# screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE)
+```
+
+recall 0.95 and specificity 0.80
+
+``` r
+# print(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE), width = Inf)
+```
+
+``` r
+# glimpse(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE))
+```
+
+\[insert table - Jose\]
+
+``` r
+# creating the object
+# influenza_valid3_results <- screen_analyzer(
+#     influensa_valid_3_screening_results, 
+#     human_decision = human_code, 
+#     key_result = FALSE
+# )
+```
+
+Text
+
+``` r
+# false_negatives_valid3 <- influenza_valid3_results %>%
+#    filter(human_in_gpt_ex)
+```
+
+Text
+
+``` r
+# Creating the object (table)
+# influenza_valid3_resultstable <- influenza_valid3_results %>%
+#    select(n_screened, n_missing, human_in_gpt_ex, human_ex_gpt_in, human_ex_gpt_ex, human_in_gpt_in, accuracy, p_agreement, precision, recall, npv, specificity, bacc, F2, mcc, irr) %>%
+#   pivot_longer(
+#     cols = everything(), 
+#     names_to = "Metric",      
+#     values_to = "Value"        
+#   )
+
+# Inserting the table in the report
+# influenza_valid3_resultstable %>%
+#   gt() %>%
+#   tab_header(
+#       title = "Influenza validation 3 - screening performance metrics",
+#       subtitle = "Evaluation of AIscreenR against content experts"
+#   ) %>%
+#   fmt_number(
+#       columns = Value,
+#       decimals = 2 # adjusting two decimals
+#   )
+```
+
+### Performance Metrics Interpretation
+
+- **Classification Breakdown**:
+
+  - **True Positives (`human_in_gpt_in = 36`)**: Both the content
+    experts and AIscreenR agreed on the inclusion of 36 articles.
+
+  - **True Negatives (`human_ex_gpt_ex = 129`)**: Both agreed on the
+    exclusion of 129 articles.
+
+  - **False Negatives (`human_in_gpt_ex = 2`)**: Only 2 relevant
+    articles included by the content experts were missed by AIscreenR.
+
+  - **False Positives (`human_ex_gpt_in = 33`)**: AIscreenR included 33
+    articles that were originally excluded by the content experts.
+
+- **Sensitivity / Recall (`0.95`)**: AIscreenR included 95% of all
+  articles included by the content experts.
+
+- **Specificity (`0.80`)**: AIscreenR correctly ruled out 80% of
+  irrelevant references, which suggests a robust filtering barrier
+  against unwanted records.
+
+- **Precision (`0.52`)**: Indicates that roughly half of the articles
+  selected by AIscreenR were deemed relevant by the content experts,
+  reflecting a tendency to cast a wider net to ensure high sensitivity.
+
+- **Negative Predictive Value (`0.98`)**: Reflects high reliability when
+  AIscreenR decides to exclude an article, as 98% of references excluded
+  by AIscreenR aligned with the content experts’ decisions.
+
+- **Overall Agreement (`p_agreement = 0.82`)**: Highlights a strong
+  overall consensus of 82% between AIscreenR and the content experts.
+
+- \*\*\*\*\*\*\*\*\*\*\*
+
+- Los dos falsos negativos son 1) una scoping review
+  [https://dx.doi.org/10.1016/j.vaccine.2026.128341](#0)
+
+y 2) un Research Letter que no tenía abstract
+(<https://dx.doi.org/10.1001/jama.2026.2173>)
 
 # COVID-19 vaccines
 
