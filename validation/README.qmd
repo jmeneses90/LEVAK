@@ -134,24 +134,27 @@ Following a first draft of the prompt prepared by Jose Meneses and approved by t
 # write.xlsx(inf_valid1_screening,"validation/outputs/influensa/inf_es/inf_valid1_screening.xlsx")
 ```
 
-
-
-***********
-
 ## Analysis
 
-### Performance metrics: analyzing the screening results
+### Performance metrics (validation 1)
+
+We use the function `screen_analyzer` in `AIscreenR` to calculate the performance metrics, as follows:
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
-# #  Analysis - screen_analyzer 
-# influensa_valid1_analysis <- screen_analyzer(influensa_valid1_screening, human_decision = human_code, key_result = FALSE ) 
+# loading the screeing result file
+inf_valid1_screening <- readRDS("C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid_1_screening.rds")
+class(inf_valid1_screening) # checking the class: gpt, list
 
-# glimpse(influensa_valid1_analysis)
-# saveRDS(influensa_valid1_analysis, "outputs/influensa_valid1_analysis.rds") 
-# influensa_valid1_analysis_excel <- write.xlsx(influensa_valid1_analysis, "outputs/influensa_valid1_analysis_excel.xlsx")
+inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = human_code, key_result = FALSE)
+
+glimpse(inf_valid1_analysis)
+saveRDS(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid1_analysis.rds")
+inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
 
-### Key results (validation 1)
+
+
+
 
 - `AIscreenR` included 81 studies and excluded 119 studies.
 
