@@ -207,15 +207,17 @@ table_data <- lookup |>
 
 ```{r}
 #| label: tbl-valid
-#| tbl-cap: "Performance metrics of the AIscreenR validation: Influenza vaccines"
+#| tbl-cap: "metrics AIscreenR influenza ES_valid1"
 #| echo: false
+#| message: false
+#| warning=: false
 
 table_data |>
   gt(groupname_col = "section", rowname_col = "name") |>
   cols_hide(var) |>
   cols_align(align = "right", columns = value) |>
   tab_header(
-    title = "Performance metrics of the AIscreenR validation: Influenza vaccines",
+    title = "Performance metrics of the AIscreenR: Influenza vaccines, effects and safety, validation 1",
     subtitle = "Output from screen_analyzer (gpt-5-mini, 200 references)"
   ) |>
   tab_source_note("TP = true positive, FP = false positive, FN = false negative, TN = true negative.")
