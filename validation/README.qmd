@@ -152,8 +152,78 @@ We use the function `screen_analyzer` in `AIscreenR` to calculate the performanc
 # inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
 
+```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+lookup <- tribble(
+  ~section,                  ~var,                 ~name,
+  "Setup",                   "promptid",           "Prompt ID",
+  "Setup",                   "model",              "Model",
+  "Setup",                   "reps",               "Number of repetitions",
+  "Setup",                   "top_p",              "top_p",
+  "References",              "n_refs",             "Number of references",
+  "References",              "n_screened",         "Number screened",
+  "References",              "n_missing",          "Number missing",
+  "Confusion matrix",        "human_in_gpt_in",    "Human includes, GPT includes (TP)",
+  "Confusion matrix",        "human_ex_gpt_in",    "Human excludes, GPT includes (FP)",
+  "Confusion matrix",        "human_in_gpt_ex",    "Human includes, GPT excludes (FN)",
+  "Confusion matrix",        "human_ex_gpt_ex",    "Human excludes, GPT excludes (TN)",
+  "Performance measures",    "accuracy",           "Accuracy",
+  "Performance measures",    "p_agreement",        "Proportion agreement",
+  "Performance measures",    "recall",             "Recall (sensitivity)",
+  "Performance measures",    "specificity",        "Specificity",
+  "Performance measures",    "precision",          "Precision",
+  "Performance measures",    "npv",                "NPV",
+  "Performance measures",    "bacc",               "Balanced accuracy",
+  "Performance measures",    "F2",                 "F2",
+  "Performance measures",    "mcc",                "MCC"
+)
+```
+
+```{r}
+long <- inf_valid1_analysis |>
+  mutate(across(everything(), as.character)) |>
+  pivot_longer(everything(), names_to = "var", values_to = "value")
+```
 
 
+```{r}
+integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
+              "human_in_gpt_in", "human_ex_gpt_in",
+              "human_in_gpt_ex", "human_ex_gpt_ex", "recall", 
+              "accuracy", "specificity", "precision", "npv", 
+              "bacc", "F2", "mcc")
+text_vars <- c("model")
+
+table_data <- lookup |>
+  left_join(long, by = "var") |>
+  mutate(
+    value = case_when(
+      var %in% text_vars ~ value,
+      var %in% integers  ~ as.character(as.integer(as.numeric(value))),
+      var == "top_p"     ~ as.character(as.numeric(value)),
+      TRUE               ~ sprintf("%.3f", as.numeric(value))
+    )
+  )
+```
+
+```{r}
+#| label: tbl-valid
+#| tbl-cap: "Performance metrics of the AIscreenR validation: Influenza vaccines"
+#| echo: false
+
+table_data |>
+  gt(groupname_col = "section", rowname_col = "name") |>
+  cols_hide(var) |>
+  cols_align(align = "right", columns = value) |>
+  tab_header(
+    title = "Performance metrics of the AIscreenR validation: Influenza vaccines",
+    subtitle = "Output from screen_analyzer (gpt-5-mini, 200 references)"
+  ) |>
+  tab_source_note("TP = true positive, FP = false positive, FN = false negative, TN = true negative.")
+```
+
+inserting the table in the report:
+
+**Previous text**: 
 
 - `AIscreenR` included 81 studies and excluded 119 studies.
 
