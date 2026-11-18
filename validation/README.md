@@ -17,6 +17,7 @@ Jose F. Meneses-Echavez
   - [Analysis](#analysis)
     - [Performance metrics (validation
       1)](#performance-metrics-validation-1)
+    - [Second evaluation](#second-evaluation)
   - [Running the screening process](#running-the-screening-process)
   - [Analysis](#analysis-1)
     - [Performance metrics: analyzing the screening
@@ -211,13 +212,14 @@ inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = hu
 # inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
 
+The `screen_analyzer` outputs a dataframe, which we’ll now work on to
+extract the key performance metrics and display them in a table.
+
 ``` r
 lookup <- tribble(
   ~section,                  ~var,                 ~name,
-  "Setup",                   "promptid",           "Prompt ID",
   "Setup",                   "model",              "Model",
   "Setup",                   "reps",               "Number of repetitions",
-  "Setup",                   "top_p",              "top_p",
   "References",              "n_refs",             "Number of references",
   "References",              "n_screened",         "Number screened",
   "References",              "n_missing",          "Number missing",
@@ -233,6 +235,7 @@ lookup <- tribble(
   "Performance measures",    "npv",                "NPV",
   "Performance measures",    "bacc",               "Balanced accuracy",
   "Performance measures",    "F2",                 "F2",
+  "Performance measures",    "mcc",                "Matthews Correlation Coefficient",
 )
 ```
 
@@ -245,9 +248,7 @@ long <- inf_valid1_analysis |>
 ``` r
 integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
               "human_in_gpt_in", "human_ex_gpt_in",
-              "human_in_gpt_ex", "human_ex_gpt_ex", "recall", 
-              "accuracy", "specificity", "precision", "npv", 
-              "bacc", "F2")
+              "human_in_gpt_ex", "human_ex_gpt_ex")
 text_vars <- c("model")
 
 table_data <- lookup |>
@@ -271,10 +272,8 @@ effects & safety, valid. 1
 
 | Section              | Measure                           |      Value |
 |:---------------------|:----------------------------------|-----------:|
-| Setup                | Prompt ID                         |          1 |
-|                      | Model                             | gpt-5-mini |
+| Setup                | Model                             | gpt-5-mini |
 |                      | Number of repetitions             |          1 |
-|                      | top_p                             |          1 |
 | References           | Number of references              |        200 |
 |                      | Number screened                   |        200 |
 |                      | Number missing                    |          0 |
@@ -282,14 +281,15 @@ effects & safety, valid. 1
 |                      | Human excludes, GPT includes (FP) |         43 |
 |                      | Human includes, GPT excludes (FN) |          0 |
 |                      | Human excludes, GPT excludes (TN) |        119 |
-| Performance measures | Accuracy                          |          0 |
+| Performance measures | Accuracy                          |      0.215 |
 |                      | Proportion agreement              |      0.785 |
-|                      | Recall (sensitivity)              |          1 |
-|                      | Specificity                       |          0 |
-|                      | Precision                         |          0 |
-|                      | NPV                               |          1 |
-|                      | Balanced accuracy                 |          0 |
-|                      | F2                                |          0 |
+|                      | Recall (sensitivity)              |      1.000 |
+|                      | Specificity                       |      0.735 |
+|                      | Precision                         |      0.469 |
+|                      | NPV                               |      1.000 |
+|                      | Balanced accuracy                 |      0.867 |
+|                      | F2                                |      0.399 |
+|                      | Matthews Correlation Coefficient  |      0.794 |
 
 </div>
 
@@ -299,51 +299,60 @@ effects & safety, valid. 1
 true positive, FP = false positive, FN = false negative, TN = true
 negative. NPV = negative predicitve value*
 
-    inserting the table in the report:
+inserting the table in the report:
 
-    **Previous text**: 
+**Previous text**:
 
-    - `AIscreenR` included 81 studies and excluded 119 studies.
+- `AIscreenR` included 81 studies and excluded 119 studies.
 
-    - `AIscreenR` had zero false negatives, which means that it excluded no relevant study. The **recall (sensitivity)** is **1**, which means that it correctly identified all of the studies that were included by human coders.
+- `AIscreenR` had zero false negatives, which means that it excluded no
+  relevant study. The **recall (sensitivity)** is **1**, which means
+  that it correctly identified all of the studies that were included by
+  human coders.
 
-    - `AIscreenR` included 43 studies (21%) that human coders had excluded (**false positives**).
+- `AIscreenR` included 43 studies (21%) that human coders had excluded
+  (**false positives**).
 
-    - The **specificity** of `AIscreenR` is **73%**, which means that it correctly excluded 73% of the studies that were excluded by human coders. `AIscreenR` included 43 studies that human coders had excluded.
+- The **specificity** of `AIscreenR` is **73%**, which means that it
+  correctly excluded 73% of the studies that were excluded by human
+  coders. `AIscreenR` included 43 studies that human coders had
+  excluded.
 
-    - The NPV of 1 suggested that `AIscreenR` correctly excluded all the irrelevant studies (those excluded by human coders).
+- The NPV of 1 suggested that `AIscreenR` correctly excluded all the
+  irrelevant studies (those excluded by human coders).
 
-    - The overall agreement between human coders and `AIscreenR` was 78%, indicating a disagreement of 21%.
+- The overall agreement between human coders and `AIscreenR` was 78%,
+  indicating a disagreement of 21%.
 
-    - The **precision**, the ability to include only references that should be included, was 47%.
+- The **precision**, the ability to include only references that should
+  be included, was 47%.
 
-    #### False positives analysis
+#### False positives analysis
 
-    The LEVAK team is interested in understanding the reasons behind the false positives. These are the studies that were included by `AIscreenR` but excluded by human coders.
+The LEVAK team is interested in understanding the reasons behind the
+false positives. These are the studies that were included by `AIscreenR`
+but excluded by human coders.
 
+We will analyze the false positives to identify any common
+characteristics or patterns that may have led to their inclusion by
+`AIscreenR`. This analysis will help us understand the limitations of
+`AIscreenR` and provide insights for improving its performance in future
+screenings.
 
-    ::: {.cell}
+The LEVAK team used the insights from this false negative analysis to
+refine the prompt and put it to the test in a second round of screening.
 
-    :::
+### Second evaluation
 
+The content experts (human_coders) independently read the remaining 234
+references from 2026. We used the same methodological approach as
+described for the first evaluation above.
 
-    We will analyze the false positives to identify any common characteristics or patterns that may have led to their inclusion by `AIscreenR`. This analysis will help us understand the limitations of `AIscreenR` and provide insights for improving its performance in future screenings.
+We first selec the remaining 234 references from 2026:
 
-    The LEVAK team used the insights from this false negative analysis to refine the prompt and put it to the test in a second round of screening.
-
-    ### Second evaluation
-
-    The content experts (human_coders) independently read the remaining 234 references from 2026. We used the same methodological approach as described for the first evaluation above.
-
-    We first selec the remaining 234 references from 2026:
-
-
-    ::: {.cell}
-
-    ```{.r .cell-code}
-    # references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
-
-:::
+``` r
+# references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
+```
 
 Renaming U4 to ‘human_code’:
 
