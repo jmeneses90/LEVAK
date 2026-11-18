@@ -268,13 +268,17 @@ lookup <- tribble(
 ```
 
 **Step 2**: Pivot the results to long format. Everything is converted to
-text first, because the column must hold both numbers and text.
+text first, because the column must hold both numbers and text (GPT
+model).
 
 ``` r
 long <- inf_valid1_analysis |>
   mutate(across(everything(), as.character)) |>
   pivot_longer(everything(), names_to = "var", values_to = "value")
 ```
+
+**Step 3** Join and format the numbers. Integers are shown without
+decimals, and measures between 0 and 1 are shown with three decimals.
 
 ``` r
 integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
@@ -294,10 +298,15 @@ table_data <- lookup |>
   )
 ```
 
+**Step 4** Build the table with `knitr::kable()`
+
+knitr::kable() produces a plain Markdown pipe table, which GitHub
+displays cleanly.
+
 <div id="tbl-valid">
 
-Table 1: Performance metrics of the AIscreenR: Influenza vaccines,
-effects & safety, valid. 1
+Table 1: **Performance metrics of the AIscreenR: Influenza
+vaccines/effects & safety - validation 1**
 
 <div class="cell-output-display">
 
@@ -328,9 +337,7 @@ effects & safety, valid. 1
 
 *Note: Output from screen_analyzer (gpt-5-mini, 200 references). TP =
 true positive, FP = false positive, FN = false negative, TN = true
-negative. NPV = negative predicitve value*
-
-inserting the table in the report:
+negative. NPV = negative predictive value*
 
 **Previous text**:
 
