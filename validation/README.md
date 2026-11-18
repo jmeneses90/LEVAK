@@ -1,6 +1,6 @@
 # LEVAK validation framework
 Jose F. Meneses-Echavez
-2026-11-17
+2026-11-18
 
 - [Background](#background)
 - [Objective](#objective)
@@ -15,14 +15,13 @@ Jose F. Meneses-Echavez
   - [Prompt](#prompt)
   - [Running the screening](#running-the-screening)
   - [Analysis](#analysis)
-    - [Performance metrics: analyzing the screening
-      results](#performance-metrics-analyzing-the-screening-results)
-    - [Key results (validation 1)](#key-results-validation-1)
+    - [Performance metrics (validation
+      1)](#performance-metrics-validation-1)
     - [Second evaluation](#second-evaluation)
   - [Running the screening process](#running-the-screening-process)
   - [Analysis](#analysis-1)
     - [Performance metrics: analyzing the screening
-      results](#performance-metrics-analyzing-the-screening-results-1)
+      results](#performance-metrics-analyzing-the-screening-results)
     - [Confusion matrix](#confusion-matrix)
     - [Key results, second validation](#key-results-second-validation)
     - [Third evaluation](#third-evaluation)
@@ -67,30 +66,30 @@ evaluation and reporting into a dedicated chunk.
 
 ``` r
 # Load packages and libraries
-library(rsconnect)
-library(AIscreenR)
-library(writexl)
-library(stringr)
-library(dplyr)
-library(synthesisr)
-library(tibble)
-library(revtools)
-library(flextable)
-library(tinytex)
-library(tidyr)
-library(ggplot2)
-library(gt)
-library(webshot2)
-library(packrat)
-library(rsconnect)
-library(chromote)
-library(readxl)
-library(future)
-library(readr)
-library(openxlsx)
+# library(rsconnect)
+# library(AIscreenR)
+# library(writexl)
+# library(stringr)
+# library(dplyr)
+# library(synthesisr)
+# library(tibble)
+# library(revtools)
+# library(flextable)
+# library(tinytex)
+# library(tidyr)
+# library(ggplot2)
+# library(gt)
+# library(webshot2)
+# library(packrat)
+# library(rsconnect)
+# library(chromote)
+# library(readxl)
+# library(future)
+# library(readr)
+# library(openxlsx)
 
 # install the most recent pakcage update
-devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
+# devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
 ```
 
 ## API key
@@ -101,7 +100,7 @@ API key (which is private and confidential), you can save it using the
 following code:
 
 ``` r
-get_api_key()
+# get_api_key()
 ```
 
 # Influenza vaccines
@@ -164,11 +163,11 @@ approved by the content experts, we ran the screening process in
 
 ``` r
 # prompt_inf_valid1 <-"Role: You are an expert systematic review screener expert in vaccinology and epidemiology. Task: Evaluate whether a study meets the following eligibility criteria: 1. Inclusion Criteria: A study must meet all the following criteria to be included:
-# Population: Human participants of any age, health status, or vaccination history. Intervention: The study evaluates the effects, efficacy, or safety of any influenza vaccine. The study must report data specifically on influenza vaccines.
-# Comparison: No restrictions (any comparator or no comparator is acceptable). Eligible Study Designs: Experimental studies: Randomized controlled trials (RCTs), non-randomized studies, quasi-experimental.
-# Observational: Prospective/retrospective cohort, population-based, registry-based, case-control, and nested case-control. Secondary/Other: Systematic reviews, meta-analyses, and post-marketing safety evaluations. Include guidelines only if explicitly based on systematic reviews. 
-# 2. Exclusion Criteria. Exclude the study if any of the following apply: Not conducted in humans; does not report results specific to influenza vaccines; cross-sectional studies; surveys or purely self-reported data without outcome validation;  qualitative studies; narrative (non-systematic) reviews; case reports, case series, editorials, commentaries, letters without original or synthesized data.
-# Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied. Provide a rationale for your assessment"
+# # Population: Human participants of any age, health status, or vaccination history. Intervention: The study evaluates the effects, efficacy, or safety of any influenza vaccine. The study must report data specifically on influenza vaccines.
+# # Comparison: No restrictions (any comparator or no comparator is acceptable). Eligible Study Designs: Experimental studies: Randomized controlled trials (RCTs), non-randomized studies, quasi-experimental.
+# # Observational: Prospective/retrospective cohort, population-based, registry-based, case-control, and nested case-control. Secondary/Other: Systematic reviews, meta-analyses, and post-marketing safety evaluations. Include guidelines only if explicitly based on systematic reviews. 
+# # 2. Exclusion Criteria. Exclude the study if any of the following apply: Not conducted in humans; does not report results specific to influenza vaccines; cross-sectional studies; surveys or purely self-reported data without outcome validation;  qualitative studies; narrative (non-systematic) reviews; case reports, case series, editorials, commentaries, letters without original or synthesized data.
+# # Evaluation Rule: Does the study meet all the inclusion criteria? Only include the study if every criterion is satisfied. Provide a rationale for your assessment"
 
 # writeLines(prompt_inf_valid1, "validation/prompts/influensa/inf_es/prompt_inf_valid1.txt")
 ```
@@ -194,22 +193,24 @@ approved by the content experts, we ran the screening process in
 # write.xlsx(inf_valid1_screening,"validation/outputs/influensa/inf_es/inf_valid1_screening.xlsx")
 ```
 
-------------------------------------------------------------------------
-
 ## Analysis
 
-### Performance metrics: analyzing the screening results
+### Performance metrics (validation 1)
+
+We use the function `screen_analyzer` in `AIscreenR` to calculate the
+performance metrics, as follows:
 
 ``` r
-# #  Analysis - screen_analyzer 
-# influensa_valid1_analysis <- screen_analyzer(influensa_valid1_screening, human_decision = human_code, key_result = FALSE ) 
+# loading the screeing result file
+# inf_valid1_screening <- readRDS("C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid_1_screening.rds")
+# class(inf_valid1_screening) # checking the class: gpt, list
 
-# glimpse(influensa_valid1_analysis)
-# saveRDS(influensa_valid1_analysis, "outputs/influensa_valid1_analysis.rds") 
-# influensa_valid1_analysis_excel <- write.xlsx(influensa_valid1_analysis, "outputs/influensa_valid1_analysis_excel.xlsx")
+# inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = human_code, key_result = FALSE)
+
+# glimpse(inf_valid1_analysis)
+# saveRDS(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid1_analysis.rds")
+# inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
-
-### Key results (validation 1)
 
 - `AIscreenR` included 81 studies and excluded 119 studies.
 

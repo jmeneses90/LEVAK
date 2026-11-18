@@ -23,30 +23,30 @@ The main aim is to prospectively evaluate the performance of `AIscreenR` in scre
 Centralizing all packages, libraries and functions used for the evaluation and reporting into a dedicated chunk.
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 # Load packages and libraries
-library(rsconnect)
-library(AIscreenR)
-library(writexl)
-library(stringr)
-library(dplyr)
-library(synthesisr)
-library(tibble)
-library(revtools)
-library(flextable)
-library(tinytex)
-library(tidyr)
-library(ggplot2)
-library(gt)
-library(webshot2)
-library(packrat)
-library(rsconnect)
-library(chromote)
-library(readxl)
-library(future)
-library(readr)
-library(openxlsx)
+# library(rsconnect)
+# library(AIscreenR)
+# library(writexl)
+# library(stringr)
+# library(dplyr)
+# library(synthesisr)
+# library(tibble)
+# library(revtools)
+# library(flextable)
+# library(tinytex)
+# library(tidyr)
+# library(ggplot2)
+# library(gt)
+# library(webshot2)
+# library(packrat)
+# library(rsconnect)
+# library(chromote)
+# library(readxl)
+# library(future)
+# library(readr)
+# library(openxlsx)
 
 # install the most recent pakcage update
-devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
+# devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
 ```
 
 ## API key
@@ -142,16 +142,15 @@ We use the function `screen_analyzer` in `AIscreenR` to calculate the performanc
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 # loading the screeing result file
-inf_valid1_screening <- readRDS("C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid_1_screening.rds")
-class(inf_valid1_screening) # checking the class: gpt, list
+# inf_valid1_screening <- readRDS("C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid_1_screening.rds")
+# class(inf_valid1_screening) # checking the class: gpt, list
 
-inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = human_code, key_result = FALSE)
+# inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = human_code, key_result = FALSE)
 
-glimpse(inf_valid1_analysis)
-saveRDS(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid1_analysis.rds")
-inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
+# glimpse(inf_valid1_analysis)
+# saveRDS(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_es/inf_valid1_analysis.rds")
+# inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
-
 
 
 
