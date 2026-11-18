@@ -300,9 +300,6 @@ table_data <- lookup |>
 
 **Step 4** Build the table with `knitr::kable()`
 
-knitr::kable() produces a plain Markdown pipe table, which GitHub
-displays cleanly.
-
 <div id="tbl-valid">
 
 Table 1: **Performance metrics of the AIscreenR: Influenza
@@ -335,9 +332,8 @@ vaccines/effects & safety - validation 1**
 
 </div>
 
-*Note: Output from screen_analyzer (gpt-5-mini, 200 references). TP =
-true positive, FP = false positive, FN = false negative, TN = true
-negative. NPV = negative predictive value*
+*Note: FN = false negative, FP = false positive, NPV = negative
+predictive value, TN = true negative, TP = true positive*
 
 **Previous text**:
 
