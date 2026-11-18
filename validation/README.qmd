@@ -13,14 +13,22 @@ execute:
 ---
 
 ## Background
-Insert a short background sketching the report
+The study selection (screening) process in the living evidence map for the Adult Immunisation in Norway ([LEVAK](https://github.com/jmeneses90/LEVAK)) is supported by the `AIscreenR`(https://mikkelvembye.github.io/AIscreenR/index.html) package. 
+
+This document describes step-by-step the validation of `AIscreenR` in each study selection (screening) process implemented in LEVAK. The reader will find a nuanced, stepwise workflow detailing how references are uploaded, how the text file is processed, how the screening process is run in `AIscreenR`, and how the results are analyzed and reported.
+
+The first validation case ([Influenza vaccines](#influenza-vaccines)) will be used as the example to describe every single step in the validation framework. Some lines of code will be omitted in the other validations to enhance readability.
+
+For further details or queries, please contact: Jose Meneses-Echavez at: [jose.meneses\@fhi.no]. 
 
 ## Objective
+
 The main aim is to prospectively evaluate the performance of `AIscreenR` in screening references at the title and abstract level in the different categories and folders presented in the living evidence map for vaccine research [LEVAK](https://github.com/jmeneses90/LEVAK), using the screening decision of content experts as the gold-standard comparative benchmark.
 
 ## Uploading the libraries and packages
 
 Centralizing all packages, libraries and functions used for the evaluation and reporting into a dedicated chunk.
+
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 # Load packages and libraries
 library(rsconnect)
@@ -50,21 +58,21 @@ library(openxlsx)
 ```
 
 ## API key
-`AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code: 
+
+`AIscreenR` uses an API key to connect to a Large Language Model (LLM), in this case, the OpenAI API to connect to ChatGPT. After obtaining your API key (which is private and confidential), you can save it using the following code:
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 # get_api_key()
 ```
 
-# Influenza vaccines
+# Influenza vaccines {#influenza-vaccines}
 
-The validation methods are presented separately for the two main categories in LEVAK: 
-  a) vaccine effectiveness and safety, and 
-  b) burden of disease and risk groups.
+The validation methods are presented separately for the two main categories in LEVAK: a) vaccine effectiveness and safety, and b) burden of disease and risk groups.
 
-##  Vaccine effectiveness and safety
+## Vaccine effectiveness and safety
 
 ### First evaluation
+
 The literature searches yielded a total of 5451 unique references:
 
 - 2023 (1733 references)
@@ -72,14 +80,16 @@ The literature searches yielded a total of 5451 unique references:
 - 2025 (1731 references)
 - 2026 (434 references)
 
-References from 2026 are used in this valdiation.
+References from 2026 are used in this validation.
 
-Further details on the LEVAK methodological framework are available at: \[https://osf.io/pmut5/overview\].
+Further details on the LEVAK methodological framework are available at: https://osf.io/pmut5/overview.
 
 To develop a robust prompt, we first evaluated `AIscreenR`'s performance by screening a random sample of 200 references, from the 434 references identified in 2026.
-During the second week of April 2026, two content experts (Birgitte Klüwer and Anna Hayman Robertson) screened these references for eligibility based on predefined selection criteria (available in the LEVAK protocol).
+
+During the second week of **April 2026**, two content experts (Birgitte Klüwer and Anna Hayman Robertson) screened these references for eligibility based on predefined selection criteria (available in the LEVAK protocol).
 
 ## Importing the dataset
+
 Importing the dataset and preparing it for screening. The dataset is in RIS format. We will read the RIS file into a dataframe and then rename some columns for better clarity.
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -115,6 +125,7 @@ Following a first draft of the prompt prepared by Jose Meneses and approved by t
 ```
 
 ## Running the screening
+
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 #inf_valid1_screening <-  tabscreen_gpt(
   #data = references_inf_valid_1,
@@ -152,7 +163,11 @@ inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = hu
 # inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
 
-The `screen_analyzer` outputs a dataframe, which we'll now work on to extract the key performance metrics and display them in a table. 
+**Reporting the screening results**
+
+The `screen_analyzer` function outputs a dataframe (one row with 25 columns, unreadable as a table). We need to pivot the dataframe to long format (one row per measure), group the measures into sections, and format the numbers.
+
+**Step 1**. Create a lookup table that shows the section and display name (how each metric is called in the report). Note that `var` is the object name from `screen_analyzer`. 
 
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 lookup <- tribble(
@@ -178,12 +193,14 @@ lookup <- tribble(
 )
 ```
 
+**Step 2**: Pivot the results to long format.
+Everything is converted to text first, because the column must hold both numbers and text.
+
 ```{r}
 long <- inf_valid1_analysis |>
   mutate(across(everything(), as.character)) |>
   pivot_longer(everything(), names_to = "var", values_to = "value")
 ```
-
 
 ```{r}
 integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
@@ -220,10 +237,9 @@ table_data |>
 
 *Note: Output from screen_analyzer (gpt-5-mini, 200 references). TP = true positive, FP = false positive, FN = false negative, TN = true negative. NPV = negative predicitve value*
 
-
 inserting the table in the report:
 
-**Previous text**: 
+**Previous text**:
 
 - `AIscreenR` included 81 studies and excluded 119 studies.
 
@@ -273,6 +289,7 @@ We first selec the remaining 234 references from 2026:
 ```
 
 Renaming U4 to 'human_code':
+
 ```{r}
 # references_inf_valid_2 <- references_inf_valid_2 %>% 
 #   rename(human_code = U4)
@@ -286,6 +303,7 @@ Renaming U4 to 'human_code':
 ## Running the screening process
 
 To preserve validity, we used the same prompt:
+
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 # influensa_valid_2_screening <-  tabscreen_gpt(
 #   data = references_inf_valid_2,
@@ -345,6 +363,7 @@ REVISAR LOS 4 human_in_gpt_ex
 REVISAR LOS ROW DATA PORQUE NO APARECEN EXCLUIDOS POR AMBOS
 
 **ANALYSIS PREVIO**
+
 ```{r, include= TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
 # # Step 1. Count the number of included and excluded studies based on the AI screening results
 # influensa_valid_2_screening$answer_data%>%  
@@ -430,7 +449,6 @@ Immunogenicity is added into the prompt. We test the results comparing against t
 # - Rationale: [Provide a concise, step-by-step breakdown referencing specific criteria]"
 ```
 
-
 ```{r}
 # influensa_valid_3_screening <-  tabscreen_gpt(
 #   data = references_inf_valid_1,
@@ -468,7 +486,7 @@ recall 0.95 and specificity 0.80
 # glimpse(screen_analyzer(influensa_valid_3_screening_results, human_decision = human_code, key_result = FALSE))
 ```
 
-[insert table - Jose]
+\[insert table - Jose\]
 
 ```{r}
 # creating the object
@@ -539,20 +557,19 @@ Text
 
 y 2) un Research Letter que no tenía abstract (<https://dx.doi.org/10.1001/jama.2026.2173>)
 
-
 # COVID-19 vaccines
 
-##  Vaccine effectiveness and safety
+## Vaccine effectiveness and safety
 
 Insert text
 
-##  Burden of disease and risk groups
+## Burden of disease and risk groups
 
 Insert text
 
 # Pneumococcal vaccines
 
-##  Vaccine effectiveness and safety
+## Vaccine effectiveness and safety
 
 Importing the references
 
@@ -599,7 +616,7 @@ Data cleaning
 # ) # 0 ref
 ```
 
-Prompt _ PNK ES
+Prompt \_ PNK ES
 
 The prompt is optimized to specify that studies on children under 5 are relevant only if they are at high risk due to underlying medical conditions.
 
@@ -681,28 +698,15 @@ Detailed analysis
 # saveRDS(PNK_ES_screening1_results, "validation/outputs/pnk/pnk_es/PNK_ES_screening1_results.rds") # saving the R object
 ```
 
-Screen_analyzer yields the following results: 
-n references: 250 screened
-Model: gpt-5-mini
-Recall: 96%
-Specificity: 85%
-Precision: 44%
-Negative predictive value: 99% 
-F2: 0.38
-false negatives: 1 - called as "human_in_gpt_ex"
-false positives: 34 - called as "human_ex_gpt_in"
-true positives: 27 - called as "human_in_gpt_in"
-true negatives: 188 - called as "human_ex_gpt_ex"
+Screen_analyzer yields the following results: n references: 250 screened Model: gpt-5-mini Recall: 96% Specificity: 85% Precision: 44% Negative predictive value: 99% F2: 0.38 false negatives: 1 - called as "human_in_gpt_ex" false positives: 34 - called as "human_ex_gpt_in" true positives: 27 - called as "human_in_gpt_in" true negatives: 188 - called as "human_ex_gpt_ex"
 
-##  Burden of disease and risk groups
+## Burden of disease and risk groups
 
 Insert text
 
 # Attitudes toward vaccination & vaccine coverage
 
-As reported in our [LEVAK protocol](https://osf.io/pmut5/overview), this evidence pillar consist of two categories:
-  a) Attitudes toward vaccination
-  b) Interventions to increase vaccine coverage/uptake
+As reported in our [LEVAK protocol](https://osf.io/pmut5/overview), this evidence pillar consist of two categories: a) Attitudes toward vaccination b) Interventions to increase vaccine coverage/uptake
 
 For details on the evidence mapped out within the categories, please visit our [LEVAK protocol](https://osf.io/pmut5/overview).
 
@@ -714,7 +718,7 @@ This section of the validation evaluates the performance of `AIscreenR` in ident
 
 ### Attitudes toward vaccination & vaccine coverage: primary studies on effect of interventions
 
-Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search. 
+Date: 09.11.2026 - Ingvild run the searches only in MEDLINE without the search terms of setting. This search yields 792 references. The references were exported in RIS format and saved in the folder "data/holdninger/hold_tiltak_prim" with the name "Test LEVAK tiltak uten setting.txt". Bo and Angela will check a random sample of between 50-100 references to see how many relevant references could have been missed by this search.
 
 ```{r}
 # library(AIscreenR)

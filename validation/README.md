@@ -48,7 +48,25 @@ Jose F. Meneses-Echavez
 
 ## Background
 
-Insert a short background sketching the report
+The study selection (screening) process in the living evidence map for
+the Adult Immunisation in Norway
+([LEVAK](https://github.com/jmeneses90/LEVAK)) is supported by the
+`AIscreenR`(https://mikkelvembye.github.io/AIscreenR/index.html)
+package.
+
+This document describes step-by-step the validation of `AIscreenR` in
+each study selection (screening) process implemented in LEVAK. The
+reader will find a nuanced, stepwise workflow detailing how references
+are uploaded, how the text file is processed, how the screening process
+is run in `AIscreenR`, and how the results are analyzed and reported.
+
+The first validation case ([Influenza vaccines](#influenza-vaccines))
+will be used as the example to describe every single step in the
+validation framework. Some lines of code will be omitted in the other
+validations to enhance readability.
+
+For further details or queries, please contact: Jose Meneses-Echavez at:
+\[jose.meneses@fhi.no\].
 
 ## Objective
 
@@ -120,17 +138,19 @@ The literature searches yielded a total of 5451 unique references:
 - 2025 (1731 references)
 - 2026 (434 references)
 
-References from 2026 are used in this valdiation.
+References from 2026 are used in this validation.
 
 Further details on the LEVAK methodological framework are available at:
-\[https://osf.io/pmut5/overview\].
+https://osf.io/pmut5/overview.
 
 To develop a robust prompt, we first evaluated `AIscreenR`’s performance
 by screening a random sample of 200 references, from the 434 references
-identified in 2026. During the second week of April 2026, two content
-experts (Birgitte Klüwer and Anna Hayman Robertson) screened these
-references for eligibility based on predefined selection criteria
-(available in the LEVAK protocol).
+identified in 2026.
+
+During the second week of **April 2026**, two content experts (Birgitte
+Klüwer and Anna Hayman Robertson) screened these references for
+eligibility based on predefined selection criteria (available in the
+LEVAK protocol).
 
 ## Importing the dataset
 
@@ -212,8 +232,16 @@ inf_valid1_analysis <- screen_analyzer(inf_valid1_screening, human_decision = hu
 # inf_valid1_analysis_excel <- write.xlsx(inf_valid1_analysis, "C:/Users/JOFM/Desktop/LEVAK/validation/outputs/influensa/inf_valid1_analysis_excel.xlsx")
 ```
 
-The `screen_analyzer` outputs a dataframe, which we’ll now work on to
-extract the key performance metrics and display them in a table.
+**Reporting the screening results**
+
+The `screen_analyzer` function outputs a dataframe (one row with 25
+columns, unreadable as a table). We need to pivot the dataframe to long
+format (one row per measure), group the measures into sections, and
+format the numbers.
+
+**Step 1**. Create a lookup table that shows the section and display
+name (how each metric is called in the report). Note that `var` is the
+object name from `screen_analyzer`.
 
 ``` r
 lookup <- tribble(
@@ -238,6 +266,9 @@ lookup <- tribble(
   "Performance measures",    "mcc",                "Matthews Correlation Coefficient",
 )
 ```
+
+**Step 2**: Pivot the results to long format. Everything is converted to
+text first, because the column must hold both numbers and text.
 
 ``` r
 long <- inf_valid1_analysis |>
