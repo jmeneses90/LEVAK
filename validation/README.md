@@ -17,7 +17,6 @@ Jose F. Meneses-Echavez
   - [Analysis](#analysis)
     - [Performance metrics (validation
       1)](#performance-metrics-validation-1)
-    - [Second evaluation](#second-evaluation)
   - [Running the screening process](#running-the-screening-process)
   - [Analysis](#analysis-1)
     - [Performance metrics: analyzing the screening
@@ -234,7 +233,6 @@ lookup <- tribble(
   "Performance measures",    "npv",                "NPV",
   "Performance measures",    "bacc",               "Balanced accuracy",
   "Performance measures",    "F2",                 "F2",
-  "Performance measures",    "mcc",                "MCC"
 )
 ```
 
@@ -249,7 +247,7 @@ integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
               "human_in_gpt_in", "human_ex_gpt_in",
               "human_in_gpt_ex", "human_ex_gpt_ex", "recall", 
               "accuracy", "specificity", "precision", "npv", 
-              "bacc", "F2", "mcc")
+              "bacc", "F2")
 text_vars <- c("model")
 
 table_data <- lookup |>
@@ -266,631 +264,86 @@ table_data <- lookup |>
 
 <div id="tbl-valid">
 
-Table 1: Performance metrics of the AIscreenR validation: Influenza
-vaccines
+Table 1: Performance metrics of the AIscreenR: Influenza vaccines,
+effects & safety, valid. 1
 
 <div class="cell-output-display">
 
-<div id="ufwduapkfq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ufwduapkfq table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-&#10;#ufwduapkfq thead, #ufwduapkfq tbody, #ufwduapkfq tfoot, #ufwduapkfq tr, #ufwduapkfq td, #ufwduapkfq th {
-  border-style: none;
-}
-&#10;#ufwduapkfq p {
-  margin: 0;
-  padding: 0;
-}
-&#10;#ufwduapkfq .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-&#10;#ufwduapkfq .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-&#10;#ufwduapkfq .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-&#10;#ufwduapkfq .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-&#10;#ufwduapkfq .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-&#10;#ufwduapkfq .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-&#10;#ufwduapkfq .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-&#10;#ufwduapkfq .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-&#10;#ufwduapkfq .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-&#10;#ufwduapkfq .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-&#10;#ufwduapkfq .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-&#10;#ufwduapkfq .gt_from_md > :first-child {
-  margin-top: 0;
-}
-&#10;#ufwduapkfq .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-&#10;#ufwduapkfq .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-&#10;#ufwduapkfq .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ufwduapkfq .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-&#10;#ufwduapkfq .gt_row_group_first td {
-  border-top-width: 2px;
-}
-&#10;#ufwduapkfq .gt_row_group_first th {
-  border-top-width: 2px;
-}
-&#10;#ufwduapkfq .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ufwduapkfq .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-&#10;#ufwduapkfq .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ufwduapkfq .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-&#10;#ufwduapkfq .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ufwduapkfq .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ufwduapkfq .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ufwduapkfq .gt_left {
-  text-align: left;
-}
-&#10;#ufwduapkfq .gt_center {
-  text-align: center;
-}
-&#10;#ufwduapkfq .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-&#10;#ufwduapkfq .gt_font_normal {
-  font-weight: normal;
-}
-&#10;#ufwduapkfq .gt_font_bold {
-  font-weight: bold;
-}
-&#10;#ufwduapkfq .gt_font_italic {
-  font-style: italic;
-}
-&#10;#ufwduapkfq .gt_super {
-  font-size: 65%;
-}
-&#10;#ufwduapkfq .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-&#10;#ufwduapkfq .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-&#10;#ufwduapkfq .gt_indent_1 {
-  text-indent: 5px;
-}
-&#10;#ufwduapkfq .gt_indent_2 {
-  text-indent: 10px;
-}
-&#10;#ufwduapkfq .gt_indent_3 {
-  text-indent: 15px;
-}
-&#10;#ufwduapkfq .gt_indent_4 {
-  text-indent: 20px;
-}
-&#10;#ufwduapkfq .gt_indent_5 {
-  text-indent: 25px;
-}
-&#10;#ufwduapkfq .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-&#10;#ufwduapkfq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table cell" data-quarto-postprocess="true"
-data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<th colspan="2" class="gt_heading gt_title gt_font_normal">Performance
-metrics of the AIscreenR validation: Influenza vaccines</th>
-</tr>
-<tr class="gt_heading">
-<th colspan="2"
-class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Output
-from screen_analyzer (gpt-5-mini, 200 references)</th>
-</tr>
-<tr class="gt_col_headings">
-<th id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left"
-data-quarto-table-cell-role="th" scope="col"></th>
-<th id="value" class="gt_col_heading gt_columns_bottom_border gt_right"
-data-quarto-table-cell-role="th" scope="col">value</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="gt_group_heading_row">
-<td colspan="2" id="Setup" class="gt_group_heading"
-data-quarto-table-cell-role="th" scope="colgroup">Setup</td>
-</tr>
-<tr class="gt_row_group_first">
-<td id="stub_1_1" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Prompt ID</td>
-<td class="gt_row gt_right" headers="Setup stub_1_1 value">1</td>
-</tr>
-<tr>
-<td id="stub_1_2" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Model</td>
-<td class="gt_row gt_right"
-headers="Setup stub_1_2 value">gpt-5-mini</td>
-</tr>
-<tr>
-<td id="stub_1_3" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Number of repetitions</td>
-<td class="gt_row gt_right" headers="Setup stub_1_3 value">1</td>
-</tr>
-<tr>
-<td id="stub_1_4" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">top_p</td>
-<td class="gt_row gt_right" headers="Setup stub_1_4 value">1</td>
-</tr>
-<tr class="gt_group_heading_row">
-<td colspan="2" id="References" class="gt_group_heading"
-data-quarto-table-cell-role="th" scope="colgroup">References</td>
-</tr>
-<tr class="gt_row_group_first">
-<td id="stub_1_5" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Number of references</td>
-<td class="gt_row gt_right" headers="References stub_1_5 value">200</td>
-</tr>
-<tr>
-<td id="stub_1_6" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Number screened</td>
-<td class="gt_row gt_right" headers="References stub_1_6 value">200</td>
-</tr>
-<tr>
-<td id="stub_1_7" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Number missing</td>
-<td class="gt_row gt_right" headers="References stub_1_7 value">0</td>
-</tr>
-<tr class="gt_group_heading_row">
-<td colspan="2" id="Confusion matrix" class="gt_group_heading"
-data-quarto-table-cell-role="th" scope="colgroup">Confusion matrix</td>
-</tr>
-<tr class="gt_row_group_first">
-<td id="stub_1_8" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Human includes, GPT
-includes (TP)</td>
-<td class="gt_row gt_right"
-headers="Confusion matrix stub_1_8 value">38</td>
-</tr>
-<tr>
-<td id="stub_1_9" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Human excludes, GPT
-includes (FP)</td>
-<td class="gt_row gt_right"
-headers="Confusion matrix stub_1_9 value">43</td>
-</tr>
-<tr>
-<td id="stub_1_10" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Human includes, GPT
-excludes (FN)</td>
-<td class="gt_row gt_right"
-headers="Confusion matrix stub_1_10 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_11" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Human excludes, GPT
-excludes (TN)</td>
-<td class="gt_row gt_right"
-headers="Confusion matrix stub_1_11 value">119</td>
-</tr>
-<tr class="gt_group_heading_row">
-<td colspan="2" id="Performance measures" class="gt_group_heading"
-data-quarto-table-cell-role="th" scope="colgroup">Performance
-measures</td>
-</tr>
-<tr class="gt_row_group_first">
-<td id="stub_1_12" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Accuracy</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_12 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_13" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Proportion agreement</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_13 value">0.785</td>
-</tr>
-<tr>
-<td id="stub_1_14" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Recall (sensitivity)</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_14 value">1</td>
-</tr>
-<tr>
-<td id="stub_1_15" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Specificity</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_15 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_16" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Precision</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_16 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_17" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">NPV</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_17 value">1</td>
-</tr>
-<tr>
-<td id="stub_1_18" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">Balanced accuracy</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_18 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_19" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">F2</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_19 value">0</td>
-</tr>
-<tr>
-<td id="stub_1_20" class="gt_row gt_left gt_stub"
-data-quarto-table-cell-role="th" scope="row">MCC</td>
-<td class="gt_row gt_right"
-headers="Performance measures stub_1_20 value">0</td>
-</tr>
-</tbody><tfoot>
-<tr class="gt_sourcenotes">
-<td colspan="2" class="gt_sourcenote">TP = true positive, FP = false
-positive, FN = false negative, TN = true negative.</td>
-</tr>
-</tfoot>
-&#10;</table>
+| Section              | Measure                           |      Value |
+|:---------------------|:----------------------------------|-----------:|
+| Setup                | Prompt ID                         |          1 |
+|                      | Model                             | gpt-5-mini |
+|                      | Number of repetitions             |          1 |
+|                      | top_p                             |          1 |
+| References           | Number of references              |        200 |
+|                      | Number screened                   |        200 |
+|                      | Number missing                    |          0 |
+| Confusion matrix     | Human includes, GPT includes (TP) |         38 |
+|                      | Human excludes, GPT includes (FP) |         43 |
+|                      | Human includes, GPT excludes (FN) |          0 |
+|                      | Human excludes, GPT excludes (TN) |        119 |
+| Performance measures | Accuracy                          |          0 |
+|                      | Proportion agreement              |      0.785 |
+|                      | Recall (sensitivity)              |          1 |
+|                      | Specificity                       |          0 |
+|                      | Precision                         |          0 |
+|                      | NPV                               |          1 |
+|                      | Balanced accuracy                 |          0 |
+|                      | F2                                |          0 |
 
 </div>
 
 </div>
 
-</div>
+*Note: Output from screen_analyzer (gpt-5-mini, 200 references). TP =
+true positive, FP = false positive, FN = false negative, TN = true
+negative. NPV = negative predicitve value*
 
-inserting the table in the report:
+    inserting the table in the report:
 
-**Previous text**:
+    **Previous text**: 
 
-- `AIscreenR` included 81 studies and excluded 119 studies.
+    - `AIscreenR` included 81 studies and excluded 119 studies.
 
-- `AIscreenR` had zero false negatives, which means that it excluded no
-  relevant study. The **recall (sensitivity)** is **1**, which means
-  that it correctly identified all of the studies that were included by
-  human coders.
+    - `AIscreenR` had zero false negatives, which means that it excluded no relevant study. The **recall (sensitivity)** is **1**, which means that it correctly identified all of the studies that were included by human coders.
 
-- `AIscreenR` included 43 studies (21%) that human coders had excluded
-  (**false positives**).
+    - `AIscreenR` included 43 studies (21%) that human coders had excluded (**false positives**).
 
-- The **specificity** of `AIscreenR` is **73%**, which means that it
-  correctly excluded 73% of the studies that were excluded by human
-  coders. `AIscreenR` included 43 studies that human coders had
-  excluded.
+    - The **specificity** of `AIscreenR` is **73%**, which means that it correctly excluded 73% of the studies that were excluded by human coders. `AIscreenR` included 43 studies that human coders had excluded.
 
-- The NPV of 1 suggested that `AIscreenR` correctly excluded all the
-  irrelevant studies (those excluded by human coders).
+    - The NPV of 1 suggested that `AIscreenR` correctly excluded all the irrelevant studies (those excluded by human coders).
 
-- The overall agreement between human coders and `AIscreenR` was 78%,
-  indicating a disagreement of 21%.
+    - The overall agreement between human coders and `AIscreenR` was 78%, indicating a disagreement of 21%.
 
-- The **precision**, the ability to include only references that should
-  be included, was 47%.
+    - The **precision**, the ability to include only references that should be included, was 47%.
 
-#### False positives analysis
+    #### False positives analysis
 
-The LEVAK team is interested in understanding the reasons behind the
-false positives. These are the studies that were included by `AIscreenR`
-but excluded by human coders.
+    The LEVAK team is interested in understanding the reasons behind the false positives. These are the studies that were included by `AIscreenR` but excluded by human coders.
 
-We will analyze the false positives to identify any common
-characteristics or patterns that may have led to their inclusion by
-`AIscreenR`. This analysis will help us understand the limitations of
-`AIscreenR` and provide insights for improving its performance in future
-screenings.
 
-The LEVAK team used the insights from this false negative analysis to
-refine the prompt and put it to the test in a second round of screening.
+    ::: {.cell}
 
-### Second evaluation
+    :::
 
-The content experts (human_coders) independently read the remaining 234
-references from 2026. We used the same methodological approach as
-described for the first evaluation above.
 
-We first selec the remaining 234 references from 2026:
+    We will analyze the false positives to identify any common characteristics or patterns that may have led to their inclusion by `AIscreenR`. This analysis will help us understand the limitations of `AIscreenR` and provide insights for improving its performance in future screenings.
 
-``` r
-# references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
-```
+    The LEVAK team used the insights from this false negative analysis to refine the prompt and put it to the test in a second round of screening.
+
+    ### Second evaluation
+
+    The content experts (human_coders) independently read the remaining 234 references from 2026. We used the same methodological approach as described for the first evaluation above.
+
+    We first selec the remaining 234 references from 2026:
+
+
+    ::: {.cell}
+
+    ```{.r .cell-code}
+    # references_inf_valid_2 <- read_ris_to_dataframe("data/Influensa_2d_2026_234_validering.txt")
+
+:::
 
 Renaming U4 to ‘human_code’:
 

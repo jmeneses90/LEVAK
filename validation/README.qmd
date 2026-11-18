@@ -174,7 +174,6 @@ lookup <- tribble(
   "Performance measures",    "npv",                "NPV",
   "Performance measures",    "bacc",               "Balanced accuracy",
   "Performance measures",    "F2",                 "F2",
-  "Performance measures",    "mcc",                "MCC"
 )
 ```
 
@@ -190,7 +189,7 @@ integers <- c("promptid", "reps", "n_refs", "n_screened", "n_missing",
               "human_in_gpt_in", "human_ex_gpt_in",
               "human_in_gpt_ex", "human_ex_gpt_ex", "recall", 
               "accuracy", "specificity", "precision", "npv", 
-              "bacc", "F2", "mcc")
+              "bacc", "F2")
 text_vars <- c("model")
 
 table_data <- lookup |>
@@ -207,20 +206,22 @@ table_data <- lookup |>
 
 ```{r}
 #| label: tbl-valid
-#| tbl-cap: "metrics AIscreenR influenza ES_valid1"
+#| tbl-cap: "Performance metrics of the AIscreenR: Influenza vaccines, effects & safety, valid. 1"
 #| echo: false
 #| message: false
-#| warning=: false
+#| warning: false
 
 table_data |>
-  gt(groupname_col = "section", rowname_col = "name") |>
-  cols_hide(var) |>
-  cols_align(align = "right", columns = value) |>
-  tab_header(
-    title = "Performance metrics of the AIscreenR: Influenza vaccines, effects and safety, validation 1",
-    subtitle = "Output from screen_analyzer (gpt-5-mini, 200 references)"
-  ) |>
-  tab_source_note("TP = true positive, FP = false positive, FN = false negative, TN = true negative.")
+  group_by(section) |>
+  mutate(section = if_else(row_number() == 1, section, "")) |>
+  ungroup() |>
+  select(Section = section, Measure = name, Value = value) |>
+  knitr::kable(align = "llr")
+```
+
+*Note: Output from screen_analyzer (gpt-5-mini, 200 references). TP = true positive, FP = false positive, FN = false negative, TN = true negative. NPV = negative predicitve value*
+
+
 ```
 
 inserting the table in the report:
