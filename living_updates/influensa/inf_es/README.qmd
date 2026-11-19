@@ -12,7 +12,9 @@ execute:
   message: false
 ---
 
-## Upload libraries and packages
+## General setup
+
+**Upload libraries and packages**
 
 ```{r}
 # # Load packages and libraries
@@ -46,7 +48,6 @@ execute:
 ```{r}
 # get_api_key()
 ``` 
-
 
 ## Update number: 1
 **Information**
