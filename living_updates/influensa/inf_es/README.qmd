@@ -43,9 +43,10 @@ execute:
 ```
 
 **Set API key**
-````{r}
+```{r}
 # get_api_key()
 ``` 
+
 
 ## Update number: 1
 **Information**
