@@ -2,10 +2,12 @@
 Jose F. Meneses-Echavez
 2026-11-19
 
-- [Upload libraries and packages](#upload-libraries-and-packages)
+- [General setup](#general-setup)
 - [Update number: 1](#update-number-1)
 
-## Upload libraries and packages
+## General setup
+
+**Upload libraries and packages**
 
 ``` r
 # # Load packages and libraries
@@ -35,7 +37,11 @@ Jose F. Meneses-Echavez
 # devtools::install_github("MikkelVembye/AIscreenR", quiet = TRUE)
 ```
 
-**Set API key** \# get_api_key() \`\`\`
+**Set API key**
+
+``` r
+# get_api_key()
+```
 
 ## Update number: 1
 
