@@ -1,0 +1,19 @@
+---
+title: "Influenza vaccination / effect & safety: living updates"
+author: "Jose F. Meneses-Echavez"
+date: today
+format: 
+  gfm:
+    toc: true
+    toc-depth: 3
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+
+## Update number: 1
+Date: 19/11/2026
+Resposible: Jose F. Meneses-Echavez
+
